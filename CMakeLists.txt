@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(AED_Aeroportos)
+project(DA_RailwayManagement)
 
 set(CMAKE_CXX_STANDARD 14)
 
