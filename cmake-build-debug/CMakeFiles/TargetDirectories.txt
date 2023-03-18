@@ -1,4 +1,0 @@
-/home/luis/Desktop/DA-RailwayManagement/cmake-build-debug/CMakeFiles/RailwayManagement.dir
-/home/luis/Desktop/DA-RailwayManagement/cmake-build-debug/CMakeFiles/Doxygen.dir
-/home/luis/Desktop/DA-RailwayManagement/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/luis/Desktop/DA-RailwayManagement/cmake-build-debug/CMakeFiles/rebuild_cache.dir
