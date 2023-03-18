@@ -1,0 +1,12 @@
+# ninja log v5
+1	446	1679173851181081594	CMakeFiles/RailwayManagement.dir/src/Station.cpp.o	9ca010190983410d
+2	541	1679173851277233254	CMakeFiles/RailwayManagement.dir/src/graph/VertexEdge.cpp.o	60796fd1b953fa84
+0	618	1679173851353353317	CMakeFiles/RailwayManagement.dir/src/main.cpp.o	f75ce81f908e3d99
+1	681	1679173851417454423	CMakeFiles/RailwayManagement.dir/src/graph/Graph.cpp.o	ce8e7132e1ac5f4f
+681	790	1679173851525625040	RailwayManagement	324da8c842409c81
+1	450	1679174066679259101	CMakeFiles/RailwayManagement.dir/src/graph/Graph.cpp.o	ce8e7132e1ac5f4f
+2	479	1679174066711262637	CMakeFiles/RailwayManagement.dir/src/graph/VertexEdge.cpp.o	60796fd1b953fa84
+479	593	1679174066823275016	RailwayManagement	324da8c842409c81
+1	459	1679174241667930360	CMakeFiles/RailwayManagement.dir/src/graph/Graph.cpp.o	ce8e7132e1ac5f4f
+1	503	1679174241711935222	CMakeFiles/RailwayManagement.dir/src/graph/VertexEdge.cpp.o	60796fd1b953fa84
+503	615	1679174241823947602	RailwayManagement	324da8c842409c81

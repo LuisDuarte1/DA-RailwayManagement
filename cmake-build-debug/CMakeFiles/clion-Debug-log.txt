@@ -1,0 +1,5 @@
+/snap/clion/229/bin/cmake/linux/x64/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/snap/clion/229/bin/ninja/linux/x64/ninja -G Ninja -S /home/luis/Desktop/DA-RailwayManagement -B /home/luis/Desktop/DA-RailwayManagement/cmake-build-debug
+Doxygen build started
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/luis/Desktop/DA-RailwayManagement/cmake-build-debug
