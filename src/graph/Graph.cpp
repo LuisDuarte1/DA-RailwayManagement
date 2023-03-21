@@ -46,3 +46,84 @@ int Graph::getNumVertex() const {
 std::vector<Vertex*> Graph::getVertexSet() const {
     return vertexSet;
 }
+
+void Graph::testAndVisit(std::queue<Vertex *> &q, Edge *e, Vertex *w, double residual) {
+    if (!w->isVisited() && residual > 0) {
+        w->setVisited(true);
+        w->setPath(e);
+        q.push(w);
+    }
+}
+
+int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
+    int minResidual = INT_MAX;
+    for (Vertex* v = dest; v != source;) {
+        Edge* e = v->getPath();
+        if (e->getDest() == v) {
+            minResidual = std::min(minResidual, e->getWeight() - e->getFlow());
+            v = e->getOrigin();
+        }
+        else {
+            minResidual = std::min(minResidual, e->getFlow());
+            v = e->getDest();
+        }
+    }
+    return minResidual;
+}
+
+
+bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
+    for (Vertex* v : vertexSet) {
+        v->setVisited(false);
+    }
+    source->setVisited(true);
+    std::queue<Vertex*> q;
+    q.push(source);
+    while (!q.empty() && !dest->isVisited()) {
+        Vertex* v = q.front();
+        q.pop();
+        for (Edge* e : v->getEdges()) {
+            testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
+        }
+        for (Edge* e : v->getIncoming()) {
+            testAndVisit(q, e, e->getOrigin(), e->getFlow());
+        }
+    }
+    return dest->isVisited();
+}
+
+void Graph::augmentFlowAlongPath(Vertex *source, Vertex *dest, int minResidual) {
+    for (Vertex* v = dest; v != source;) {
+        Edge* e = v->getPath();
+        if (e->getDest() == v) {
+            e->setFlow(e->getFlow() + minResidual);
+            v = e->getOrigin();
+        }
+        else {
+            e->setFlow(e->getFlow() - minResidual);
+            v = e->getDest();
+        }
+    }
+}
+
+void Graph::edmondsKarp(Vertex *source, Vertex *dest) {
+    if (source == nullptr || dest == nullptr || source == dest) {
+        return;
+    }
+
+    for (Vertex* v: vertexSet) {
+        for (Edge* e: v->getEdges()) {
+            e->setFlow(0);
+        }
+    }
+
+    while (findAugmentingPath(source, dest)) {
+        int minResidual = findMinResidualAlongPath(source, dest);
+        augmentFlowAlongPath(source, dest, minResidual);
+    }
+}
+
+
+
+
+

@@ -2,6 +2,8 @@
 #define DA_RAILWAYMANAGEMENT_GRAPH_H
 
 #include <vector>
+#include <queue>
+#include <climits>
 #include "VertexEdge.h"
 
 class Graph {
@@ -14,6 +16,11 @@ public:
     bool addBidirectionalEdge(const std::string& origin, const std::string& dest, int weight, const std::string& service);
     int getNumVertex() const;
     std::vector<Vertex*> getVertexSet() const;
+    void testAndVisit(std::queue<Vertex*>& q, Edge* e, Vertex* w, double residual);
+    bool findAugmentingPath(Vertex* source, Vertex* dest);
+    int findMinResidualAlongPath(Vertex* source, Vertex* dest);
+    void augmentFlowAlongPath(Vertex* source, Vertex* dest, int minResidual);
+    void edmondsKarp(Vertex* source, Vertex* dest);
 
     // To apply Floyd-Warshall algorithm
     double **distMatrix = nullptr;

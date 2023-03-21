@@ -48,7 +48,7 @@ public:
     Edge(Vertex* origin, Vertex* dest, int weight, const std::string& service);
     Vertex* getOrigin() const;
     Vertex* getDest() const;
-    double getWeight() const;
+    int getWeight() const;
     Edge* getReverse() const;
     int getFlow() const;
     std::string getService() const;
