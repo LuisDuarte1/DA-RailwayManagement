@@ -8,6 +8,13 @@
 #define DEFAULT_NETWORK_PATH "../dataset/network.csv"
 #define DEFAULT_STATIONS_PATH "../dataset/stations.csv"
 
-Graph* loadDataset(std::string network_path, std::string stations_path);
+/**
+ * @brief Loads the desired network.csv and stations.csv into Graph. 
+ * 
+ * @param networkPath desired network csv file
+ * @param stationsPath desired station csv file
+ * @return Graph* if sucessful otherwise returns nullptr.
+ */
+Graph* loadDataset(std::string networkPath, std::string stationsPath);
 
 #endif
