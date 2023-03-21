@@ -73,12 +73,8 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
             continue;
         }
 
-        src->addEdge(dst, capacity, service);
+        graph->addBidirectionalEdge(stationA, stationB, capacity, service);
     }
 
     return graph;
-
-    
-    
-     
 }

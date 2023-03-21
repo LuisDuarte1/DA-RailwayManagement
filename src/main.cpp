@@ -3,8 +3,10 @@
 
 int main(){
     Graph * graph = loadDataset(DEFAULT_NETWORK_PATH, DEFAULT_STATIONS_PATH);
-    for(auto i : graph->getVertexSet()){
-        std::cout << i->getStation().getName() << "\n";
-    }
-    return 0; 
+    Vertex* v1 = graph->findVertex("Lisboa Oriente");
+    Vertex* v2 = graph->findVertex("Porto Campanhã");
+    std::cout << graph->edmondsKarp(v1, v2);
+
+
+
 }

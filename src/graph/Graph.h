@@ -13,14 +13,14 @@ public:
     Vertex* findVertex(const std::string& station) const;
     bool addVertex(const Station& station);
     bool addEdge(const std::string& origin, const std::string& dest, int weight, const std::string& service);
-    bool addBidirectionalEdge(const std::string& origin, const std::string& dest, int weight, const std::string& service);
+    bool addBidirectionalEdge(const std::string& origin, const std::string& dest, int weight, const std::string& service) ;
     int getNumVertex() const;
     std::vector<Vertex*> getVertexSet() const;
     void testAndVisit(std::queue<Vertex*>& q, Edge* e, Vertex* w, double residual);
     bool findAugmentingPath(Vertex* source, Vertex* dest);
     int findMinResidualAlongPath(Vertex* source, Vertex* dest);
     void augmentFlowAlongPath(Vertex* source, Vertex* dest, int minResidual);
-    void edmondsKarp(Vertex* source, Vertex* dest);
+    int edmondsKarp(Vertex* source, Vertex* dest);
 
     // To apply Floyd-Warshall algorithm
     double **distMatrix = nullptr;

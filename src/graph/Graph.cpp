@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Graph.h"
 
 Vertex* Graph::findVertex(const std::string &station) const {
@@ -106,22 +107,35 @@ void Graph::augmentFlowAlongPath(Vertex *source, Vertex *dest, int minResidual) 
     }
 }
 
-void Graph::edmondsKarp(Vertex *source, Vertex *dest) {
+int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
+    // Check if source and destination are valid
     if (source == nullptr || dest == nullptr || source == dest) {
-        return;
+        return -1;
     }
 
-    for (Vertex* v: vertexSet) {
-        for (Edge* e: v->getEdges()) {
+    // Reset the flow in the edges
+    for (auto v: vertexSet) {
+        for (auto e: v->getEdges()) {
             e->setFlow(0);
         }
     }
 
+    int max_flow = 0;
+
     while (findAugmentingPath(source, dest)) {
-        int minResidual = findMinResidualAlongPath(source, dest);
-        augmentFlowAlongPath(source, dest, minResidual);
+        int pathFlow = INT_MAX;
+
+        // Find the minimum flow in the path
+        pathFlow = findMinResidualAlongPath(source, dest);
+        // Update the flow in the path
+        augmentFlowAlongPath(source, dest, pathFlow);
+
+        max_flow += pathFlow;
     }
+
+    return max_flow;
 }
+
 
 
 
