@@ -7,7 +7,8 @@ include_directories(src)
 
 add_executable(RailwayManagement
     src/main.cpp
-        src/graph/Graph.cpp src/graph/Graph.h src/Station.cpp src/Station.h src/graph/VertexEdge.cpp src/graph/VertexEdge.h)
+        src/graph/Graph.cpp src/graph/Graph.h src/Station.cpp src/Station.h src/graph/VertexEdge.cpp src/graph/VertexEdge.h
+        src/DatasetLoader.cpp src/DatasetLoader.h)
 
 # Doxygen Build
 find_package(Doxygen)
