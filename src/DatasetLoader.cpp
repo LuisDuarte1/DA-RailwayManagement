@@ -1,5 +1,4 @@
 #include "DatasetLoader.h"
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -18,7 +17,7 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
         return nullptr;
     }
 
-    Graph * graph = new Graph();
+    Graph* graph = new Graph();
     
     std::string stationLine;
     std::getline(stationFile, stationLine);
@@ -34,16 +33,14 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
         std::string township;
         std::getline(stationLineStream, township, ',');
         std::string line;
-        std::getline(stationLineStream, line, ',');
+        std::getline(stationLineStream, line, '\r');
         Station station = Station(name, district, municipality, township, line);
         
         if(graph->findVertex(name) != nullptr) {
             std::cout << name << " already exists in graph... skipping it.\n";
             continue;
         }
-
         graph->addVertex(station);
-
     }
 
     std::string networkLine;
@@ -75,6 +72,5 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
 
         graph->addBidirectionalEdge(stationA, stationB, capacity, service);
     }
-
     return graph;
 }
