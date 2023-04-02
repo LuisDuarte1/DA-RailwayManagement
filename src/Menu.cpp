@@ -32,12 +32,12 @@ void Menu::mainMenu() {
     // 1. With less cost for the company
     // 2. Despite the cost
     // 3. In a network with reduced connectivity
-    std::vector<std::string> options = {"\t1. List Station Info",
-                              "\t2. Shortest Path Between Stations",
-                              "\t3. Max Flow Between Stations",
-                              "\t4. Max Flow that can reach a Station",
-                              "\t5. Maintenance - More needed locations",
-                              "\t6. More affected stations for each segment"};
+    std::vector<std::string> options = {"\t1. Stations' Info",
+                                        "\t2. Max Flow Between Stations",
+                                        "\t3. Pair of Stations requiring the most amount of trains"
+                                        "\t4. Max Flow that can reach a Station",
+                                        "\t5. Maintenance - More needed locations",
+                                        "\t6. More affected stations for each segment"};
     std::cout << "======================================================" << std::endl << std::endl;
     std::cout << "\t  Portuguese Railway Analysis System  " << std::endl << std::endl;
     std::cout << "======================================================" << std::endl;
