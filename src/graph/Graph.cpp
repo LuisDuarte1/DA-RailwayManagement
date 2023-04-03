@@ -136,6 +136,30 @@ int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
     return max_flow;
 }
 
+std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingPairOfStations() {
+    int max = INT_MIN;
+    std::vector<std::pair<Vertex *, Vertex *>> maxStations;
+
+    for (auto it1 = vertexSet.begin(); it1 != vertexSet.end(); it1++) {
+        for (auto it2 = it1 + 1; it2 != vertexSet.end(); it2++) {
+            Vertex *v1 = *it1;
+            Vertex *v2 = *it2;
+            if (findAugmentingPath(v1, v2)) {
+                int thisFlow = edmondsKarp(v1, v2);
+                if (thisFlow > max) {
+                    max = thisFlow;
+                    maxStations.clear();
+                    maxStations.push_back(std::make_pair(v1, v2));
+                }
+                else if (thisFlow == max) {
+                    maxStations.push_back(std::make_pair(v1, v2));
+                }
+            }
+        }
+    }
+    return std::make_pair(maxStations, max);
+}
+
 
 
 

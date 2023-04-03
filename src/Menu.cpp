@@ -34,7 +34,7 @@ void Menu::mainMenu() {
     // 3. In a network with reduced connectivity
     std::vector<std::string> options = {"\t1. Stations' Info",
                                         "\t2. Max Flow Between Stations",
-                                        "\t3. Pair of Stations requiring the most amount of trains"
+                                        "\t3. Pair of Stations requiring the most amount of trains",
                                         "\t4. Max Flow that can reach a Station",
                                         "\t5. Maintenance - More needed locations",
                                         "\t6. More affected stations for each segment"};
@@ -44,8 +44,15 @@ void Menu::mainMenu() {
     std::cout << "0. EXIT" << std::endl;
     printOptions(options);
 
-
+    Vertex* src = graph->findVertex("Santo Tirso");
+    Vertex* dst = graph->findVertex("Guimarães");
+    std::cout << "Max flow between " << src->getStation().getName() << " and " << dst->getStation().getName() << " is " << graph->edmondsKarp(src, dst) << std::endl;
     char option;
+    auto pair = graph->moreDemandingPairOfStations();
+    for (auto el : pair.first) {
+        std::cout << el.first->getStation().getName() << " " << el.second->getStation().getName() << " " << pair.second << std::endl;
+    }
+
     do {
         std::cout << "\nChoose an option: ";
         std::cin >> option;

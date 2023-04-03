@@ -21,7 +21,7 @@ public:
     int findMinResidualAlongPath(Vertex* source, Vertex* dest);
     void augmentFlowAlongPath(Vertex* source, Vertex* dest, int minResidual);
     int edmondsKarp(Vertex* source, Vertex* dest);
-
+    std::pair<std::vector<std::pair<Vertex*, Vertex*>>, int> moreDemandingPairOfStations();
     // To apply Floyd-Warshall algorithm
     double **distMatrix = nullptr;
     int **pathMatrix = nullptr;
