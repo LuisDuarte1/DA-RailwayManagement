@@ -118,5 +118,9 @@ void Edge::setFlow(int _flow) {
     this->flow = _flow;
 }
 
+bool Edge::operator==(const Edge &edge) const {
+    return origin == edge.origin && dest == edge.dest && weight == edge.weight && service == edge.service;
+}
+
 
 

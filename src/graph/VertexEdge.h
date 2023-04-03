@@ -41,7 +41,7 @@ private:
     Vertex* dest;
     int weight;
     Edge* reverse = nullptr;
-    int flow;
+    int flow = 0;
     std::string service;
 
 public:
@@ -54,6 +54,7 @@ public:
     std::string getService() const;
     void setReverse(Edge* _reverse);
     void setFlow(int _flow);
+    bool operator==(const Edge& edge) const;
 };
 
 #endif //DA_RAILWAYMANAGEMENT_VERTEXEDGE_H

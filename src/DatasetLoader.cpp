@@ -56,7 +56,7 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
         std::getline(networkLineStream, capacityStr, ',');
         int capacity = std::atoi(capacityStr.c_str());
         std::string service;
-        std::getline(networkLineStream, service, ',');
+        std::getline(networkLineStream, service, '\r');
         Vertex * src = graph->findVertex(stationA);
         Vertex * dst = graph->findVertex(stationB);
 
@@ -70,7 +70,15 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
             continue;
         }
 
-        graph->addBidirectionalEdge(stationA, stationB, capacity, service);
+        bool edgeExists = false;
+        for (Edge* e : src->getEdges()) {
+            if (e->getDest() == dst) {
+                std::cout << "Edge " << stationA << " -> " << stationB << " already exists in graph... skipping it.\n";
+                edgeExists = true;
+            }
+        }
+
+        if (!edgeExists) graph->addBidirectionalEdge(stationA, stationB, capacity, service);
     }
     return graph;
 }

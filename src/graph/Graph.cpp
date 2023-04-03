@@ -76,6 +76,7 @@ int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
 bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
     for (Vertex* v : vertexSet) {
         v->setVisited(false);
+        v->setPath(nullptr);
     }
     source->setVisited(true);
     std::queue<Vertex*> q;
@@ -108,12 +109,10 @@ void Graph::augmentFlowAlongPath(Vertex *source, Vertex *dest, int minResidual) 
 }
 
 int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
-    // Check if source and destination are valid
     if (source == nullptr || dest == nullptr || source == dest) {
         return -1;
     }
 
-    // Reset the flow in the edges
     for (auto v: vertexSet) {
         for (auto e: v->getEdges()) {
             e->setFlow(0);
@@ -121,19 +120,29 @@ int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
     }
 
     int max_flow = 0;
-
     while (findAugmentingPath(source, dest)) {
         int pathFlow = INT_MAX;
-
-        // Find the minimum flow in the path
         pathFlow = findMinResidualAlongPath(source, dest);
-        // Update the flow in the path
         augmentFlowAlongPath(source, dest, pathFlow);
-
         max_flow += pathFlow;
     }
 
     return max_flow;
+}
+
+int Graph::edmondsKarpSinkOnly (Vertex* dest) {
+    Station superSourceStation("superSource", "", "", "", "");
+    addVertex(superSourceStation);
+
+    for (auto v: vertexSet) {
+        if (v->getEdges().size() == 1)
+            addEdge(superSourceStation.getName(), v->getStation().getName(), INT_MAX, "");
+    }
+    Vertex* superSource = findVertex(superSourceStation.getName());
+    int maxFlow = edmondsKarp(superSource, dest);
+    vertexSet.pop_back(); // delete super source
+
+    return maxFlow;
 }
 
 std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingPairOfStations() {
@@ -150,8 +159,7 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
                     max = thisFlow;
                     maxStations.clear();
                     maxStations.push_back(std::make_pair(v1, v2));
-                }
-                else if (thisFlow == max) {
+                } else if (thisFlow == max) {
                     maxStations.push_back(std::make_pair(v1, v2));
                 }
             }
@@ -159,6 +167,8 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
     }
     return std::make_pair(maxStations, max);
 }
+
+
 
 
 

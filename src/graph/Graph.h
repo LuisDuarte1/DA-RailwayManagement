@@ -25,6 +25,8 @@ public:
     // To apply Floyd-Warshall algorithm
     double **distMatrix = nullptr;
     int **pathMatrix = nullptr;
+
+    int edmondsKarpSinkOnly(Vertex *dest);
 };
 
 

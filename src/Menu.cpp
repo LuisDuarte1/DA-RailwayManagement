@@ -44,9 +44,9 @@ void Menu::mainMenu() {
     std::cout << "0. EXIT" << std::endl;
     printOptions(options);
 
-    Vertex* src = graph->findVertex("Santo Tirso");
-    Vertex* dst = graph->findVertex("Guimarães");
-    std::cout << "Max flow between " << src->getStation().getName() << " and " << dst->getStation().getName() << " is " << graph->edmondsKarp(src, dst) << std::endl;
+    Vertex* src = graph->findVertex("Porto Campanhã");
+    Vertex* dst = graph->findVertex("Coimbra B");
+    std::cout << "Max flow to sink node is "  << graph->edmondsKarpSinkOnly(dst) << std::endl;
     char option;
     auto pair = graph->moreDemandingPairOfStations();
     for (auto el : pair.first) {
