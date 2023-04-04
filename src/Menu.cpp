@@ -52,6 +52,11 @@ void Menu::mainMenu() {
     for (auto el : pair.first) {
         std::cout << el.first->getStation().getName() << " " << el.second->getStation().getName() << " " << pair.second << std::endl;
     }
+    std::vector<std::string> municipalities;
+    graph->findTopKMunicipalities(municipalities, 6);
+    for (auto el : municipalities) {
+        std::cout << el << std::endl;
+    }
 
     do {
         std::cout << "\nChoose an option: ";

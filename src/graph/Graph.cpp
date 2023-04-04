@@ -1,4 +1,5 @@
 #include <iostream>
+#include <unordered_map>
 #include "Graph.h"
 
 Vertex* Graph::findVertex(const std::string &station) const {
@@ -48,6 +49,21 @@ std::vector<Vertex*> Graph::getVertexSet() const {
     return vertexSet;
 }
 
+void Graph::DFS(Vertex* source) {
+    source->setVisited(true);
+    for (auto e: source->getEdges()) {
+        if (!e->getDest()->isVisited()) {
+            DFS(e->getDest());
+        }
+    }
+}
+
+void Graph::resetVisited() {
+    for (auto v: vertexSet) {
+        v->setVisited(false);
+    }
+}
+
 void Graph::testAndVisit(std::queue<Vertex *> &q, Edge *e, Vertex *w, double residual) {
     if (!w->isVisited() && residual > 0) {
         w->setVisited(true);
@@ -76,7 +92,6 @@ int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
 bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
     for (Vertex* v : vertexSet) {
         v->setVisited(false);
-        v->setPath(nullptr);
     }
     source->setVisited(true);
     std::queue<Vertex*> q;
@@ -113,11 +128,7 @@ int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
         return -1;
     }
 
-    for (auto v: vertexSet) {
-        for (auto e: v->getEdges()) {
-            e->setFlow(0);
-        }
-    }
+    resetFlow();
 
     int max_flow = 0;
     while (findAugmentingPath(source, dest)) {
@@ -126,6 +137,8 @@ int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
         augmentFlowAlongPath(source, dest, pathFlow);
         max_flow += pathFlow;
     }
+
+    resetFlow();
 
     return max_flow;
 }
@@ -153,7 +166,9 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
         for (auto it2 = it1 + 1; it2 != vertexSet.end(); it2++) {
             Vertex *v1 = *it1;
             Vertex *v2 = *it2;
-            if (findAugmentingPath(v1, v2)) {
+            resetVisited();
+            DFS(v1);
+            if (v2->isVisited()) {
                 int thisFlow = edmondsKarp(v1, v2);
                 if (thisFlow > max) {
                     max = thisFlow;
@@ -166,6 +181,82 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
         }
     }
     return std::make_pair(maxStations, max);
+}
+
+void Graph::findTopKMunicipalities(std::vector<std::string> &municipalities, int k) {
+    std::unordered_map<std::string, int> municipalityFlows;
+
+    for (auto v1 : vertexSet) {
+        for (auto v2 : vertexSet) {
+            if (v1 == v2) continue;
+            resetVisited();
+            DFS(v1);
+            if (v2->isVisited()) {
+                int thisFlow = edmondsKarp(v1, v2);
+                std::string municipality = v2->getStation().getMunicipality();
+
+                municipalityFlows[municipality] += thisFlow;
+            }
+        }
+    }
+
+    auto compare = [](std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
+        return a.second > b.second;
+    };
+
+    std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
+
+    for (const std::pair<std::string, int> municipality : municipalityFlows) {
+        pq.push(municipality);
+        if (pq.size() > k) pq.pop();
+    }
+
+    for (int i = 0; i < k; i++) {
+        municipalities.push_back(pq.top().first);
+        pq.pop();
+    }
+}
+
+void Graph::findTopKDistricts(std::vector<std::string> &districts, int k) {
+    std::unordered_map<std::string, int> districtFlows;
+
+    for (auto v1 : vertexSet) {
+        for (auto v2 : vertexSet) {
+            if (v1 == v2) continue;
+            resetVisited();
+            DFS(v1);
+            if (v2->isVisited()) {
+                int thisFlow = edmondsKarp(v1, v2);
+                std::string district = v2->getStation().getDistrict();
+
+                districtFlows[district] += thisFlow;
+            }
+        }
+    }
+
+    auto compare = [](std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
+        return a.second > b.second;
+    };
+
+    std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
+
+    for (const std::pair<std::string, int> district : districtFlows) {
+        pq.push(district);
+        if (pq.size() > k) pq.pop();
+    }
+
+    for (int i = 0; i < k; i++) {
+        districts.push_back(pq.top().first);
+        pq.pop();
+    }
+}
+
+void Graph::resetFlow() {
+    for (auto v : vertexSet) {
+        for (auto e : v->getEdges()) {
+            e->setFlow(0);
+        }
+    }
 }
 
 

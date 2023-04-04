@@ -79,6 +79,10 @@ bool Vertex::removeEdge(const Station& dest) {
     return removed;
 }
 
+bool Vertex::operator==(const Vertex &vertex) const {
+    return station == vertex.station;
+}
+
 Edge::Edge(Vertex *origin, Vertex *dest, int weight, const std::string &service) {
     this->origin = origin;
     this->dest = dest;

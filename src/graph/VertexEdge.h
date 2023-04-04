@@ -32,6 +32,7 @@ public:
     void setPath(Edge* _path);
     Edge* addEdge(Vertex* dest, int weight, const std::string& service);
     bool removeEdge(const Station& dest);
+    bool operator==(const Vertex& vertex) const;
 
 };
 
