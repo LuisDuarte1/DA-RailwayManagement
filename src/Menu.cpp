@@ -58,7 +58,7 @@ int Menu::ocoMenu(){
 }
 
 int Menu::rsMenu(){
-    cout << endl << "INFORMATION MENU\n";
+    cout << endl << "RELIABILITY AND SENSITIVITY TO FAILURES MENU\n";
     cout << endl << "1.Maximum number of trains that can simultaneously travel between two stations in a reduced connectivity network\n";
     cout << "2.Top-k most affected stations by segment failure\n";
     cout << "0.Return to main menu\n";
