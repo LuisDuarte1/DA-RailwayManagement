@@ -1,20 +1,29 @@
-#ifndef DA_RAILWAYMANAGEMENT_MENU_H
-#define DA_RAILWAYMANAGEMENT_MENU_H
+#ifndef UNTITLED_MENU_H
+#define UNTITLED_MENU_H
 
-
-#include <vector>
+#include <iomanip>
+#include <iostream>
 
 class Menu {
 public:
-    Menu();
-    void mainMenu();
-    void clearScreen();
-private:
 
-    void printOptions(std::vector<std::string> options);
+    int auxMenu(int maxOption, int minOption);
 
-    bool validOption(char option, int max);
+    int mainMenu();
+
+    int AboutUsMenu();
+
+    int bsmMenu();
+
+    int ocoMenu();
+
+    int rsMenu();
+
+    void menuController();
+
+    int choiceK();
+
 };
 
 
-#endif //DA_RAILWAYMANAGEMENT_MENU_H
+#endif //UNTITLED_MENU_H

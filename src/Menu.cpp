@@ -1,66 +1,145 @@
-#include <iostream>
 #include "Menu.h"
-#include "DatasetLoader.h"
 
-Graph * graph;
-Menu::Menu() {
-    graph = loadDataset(DEFAULT_NETWORK_PATH, DEFAULT_STATIONS_PATH);
-    mainMenu();
+
+using namespace std;
+
+int Menu::auxMenu(int maxOption, int minOption){
+    int op;
+    while (true) {
+        std::cin >> op;
+        if (std::cin.fail() || (op > maxOption || op < minOption)) {  // input is not an integer
+            std::cout << "Please enter a valid integer: " ;
+            std::cin.clear();  // clear the error flag
+            std::cin.ignore(10000, '\n');  // ignore the invalid input
+        } else {
+            break;  // input is valid, break the loop
+        }
+    }
+    return op;
 }
 
-void Menu::clearScreen() {
-    std::cout << "\033[2J\033[1;1H";
+int Menu::mainMenu() {
+    cout << "\n";
+    cout << "MAIN MENU\n\n";
+    cout << "1.Basic Service Metrics" << '\n' << "2.Operation Cost Optimization" << '\n' << "3.Reliability and Sensitivity to Line Failures" << '\n' << "4.About us" << '\n' << "0.Quit" << "\n\n";
+    cout << "Choose an option: ";
+    return auxMenu(4, 0);
 }
 
-void Menu::printOptions(std::vector<std::string> options) {
-    for (int i = 0; i < options.size(); i++) {
-        std::cout << options[i] << std::endl;
-    }
+int Menu::AboutUsMenu(){
+    cout << "\nHelp platform for the management of railway transports created in favor of the Design of Algorithms course\n" << endl;
+    cout << "Meet the team: \n";
+    cout << left << setw(30) <<  "Student Name\t" << setw(18) << "Student number" << setw(9) << endl;
+    cout << left << setw(30) <<  "Hélder Costa\t" << setw(18) << "202108719" << endl;
+    cout << left << setw(30)  << "Luís Duarte\t"  << setw(18) << " 202108734" << endl;
+    cout << left << setw(30)  << "Luís Jesus\t" << setw(18) << " 202108683" << endl;
+    cout << endl << "0.Return to main menu \n";
+    cout << "Choose an option: ";
+    return auxMenu(0,0);
 }
 
-bool Menu::validOption(char option, int max) {
-    if (option < '0' || option > max + '0') {
-        std::cout << "Invalid option. Please try again." << std::endl;
-        return false;
-    }
-    return true;
+int Menu::bsmMenu(){
+    cout << endl << "BASIC SERVICE METRICS MENU\n" << endl;
+    cout << "1.Maximum trains travelling simultaneously between two stations\n"
+    << "2.Pairs of stations requiring the most amount of trains\n"
+    << "3.Stations requiring larger budgets\n"
+    << "4.Maximum number of trains that can simultaneously arrive at a station\n"
+    <<  "0.Return to main menu\n" << endl;
+    cout << "Choose an option: ";
+    return auxMenu(4,0);
+
 }
 
-void Menu::mainMenu() {
-    clearScreen();
-    // WE WILL NEED THESE OPTIONS IN MENU 3:
-    // 1. With less cost for the company
-    // 2. Despite the cost
-    // 3. In a network with reduced connectivity
-    std::vector<std::string> options = {"\t1. Stations' Info",
-                                        "\t2. Max Flow Between Stations",
-                                        "\t3. Pair of Stations requiring the most amount of trains",
-                                        "\t4. Max Flow that can reach a Station",
-                                        "\t5. Maintenance - More needed locations",
-                                        "\t6. More affected stations for each segment"};
-    std::cout << "======================================================" << std::endl << std::endl;
-    std::cout << "\t  Portuguese Railway Analysis System  " << std::endl << std::endl;
-    std::cout << "======================================================" << std::endl;
-    std::cout << "0. EXIT" << std::endl;
-    printOptions(options);
+int Menu::ocoMenu(){
+    cout << endl << "OPERATION COST OPTIMIZATION MENU\n";
+    cout << endl << "1.choose station \n";
+    cout << "0.Return to main menu\n";
+    return auxMenu(1,0);
+}
 
-    Vertex* src = graph->findVertex("Porto Campanhã");
-    Vertex* dst = graph->findVertex("Coimbra B");
-    std::cout << "Max flow to sink node is "  << graph->edmondsKarpSinkOnly(dst) << std::endl;
-    char option;
-    auto pair = graph->moreDemandingPairOfStations();
-    for (auto el : pair.first) {
-        std::cout << el.first->getStation().getName() << " " << el.second->getStation().getName() << " " << pair.second << std::endl;
-    }
-    std::vector<std::string> municipalities;
-    graph->findTopKMunicipalities(municipalities, 6);
-    for (auto el : municipalities) {
-        std::cout << el << std::endl;
-    }
+int Menu::rsMenu(){
+    cout << endl << "INFORMATION MENU\n";
+    cout << endl << "1.Maximum number of trains that can simultaneously travel between two stations in a reduced connectivity network\n";
+    cout << "2.Top-k most affected stations by segment failure\n";
+    cout << "0.Return to main menu\n";
+    cout << endl << "Choose an option: ";
+    return auxMenu(2,0);
+}
 
+/*
+int Menu::choiceK(){
+    cout << endl << "Type a value for k: ";
+    return auxMenu(3019,1);
+}
+*/
+
+
+
+void Menu::menuController() {
+    int op;
+    cout << endl << "Welcome to the support platform for the management of railway transports!\n";
     do {
-        std::cout << "\nChoose an option: ";
-        std::cin >> option;
-    } while (!validOption(option, options.size()));
+        int temp;
+        op = mainMenu();
+        do {
+            switch (op) {
+                case 1:{
+                    int control = bsmMenu();
+                    do{
+                        switch (control) {
 
+                            case 0 : {
+                                temp = 0;
+                            }
+
+                        }
+                    }while(control != 0);
+                    break;
+                }
+
+                case 2:{
+                    int control = ocoMenu();
+                    do{
+                        switch (control) {
+
+                            case 0 : {
+                                 temp = 0;
+                            }
+
+                        }
+                    }while(control != 0);
+                    break;
+                }
+
+                case 3:{
+                    int control = rsMenu();
+                    do{
+                        switch (control) {
+
+                            case 0 : {
+                                temp = 0;
+                            }
+
+                        }
+                    }while(control != 0);
+                    break;
+                }
+
+                case 4:{
+                    temp = AboutUsMenu();
+                    break;
+                }
+
+                case 0:{
+                    temp = 0;
+                    break;
+                }
+
+            }
+
+        } while (temp != 0);
+
+    } while (op != 0);
+    cout << "\n";
+    cout << "Thank you for using our platform!" << endl;
 }
