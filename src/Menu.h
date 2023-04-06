@@ -10,8 +10,6 @@ public:
 
     int auxMenu(int maxOption, int minOption);
 
-    static std::string toLowerString;
-
     void clearScreen();
 
     int mainMenu();
