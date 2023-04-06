@@ -2,7 +2,6 @@
 #include "Menu.h"
 #include "DatasetLoader.h"
 
-Graph * graph;
 Menu::Menu() {
     graph = loadDataset(DEFAULT_NETWORK_PATH, DEFAULT_STATIONS_PATH);
     mainMenu();
@@ -26,6 +25,97 @@ bool Menu::validOption(char option, int max) {
     return true;
 }
 
+void Menu::maximumTrainsReducedConnectivityMenu() {
+    std::cout << "======================================================" << std::endl << std::endl;
+    Vertex * src = getValidStation("source");
+    Vertex * dst = getValidStation("destination");
+    std::vector<Edge*> segmentsToExclude;
+    while(true){
+        Edge * edge = getValidSegment("broken segment");
+        segmentsToExclude.push_back(edge);
+        if(!getBooleanInputFromUser("Do you wish to insert more segments (y/N): ", false)) break;
+    }
+    int normalFlow = graph->edmondsKarp(src, dst);
+    int result = maximumTrainsReducedConnectivity(graph, segmentsToExclude, src, dst);
+    std::cout << "Results: \n";
+    std::cout << "With reduced connectivity: \t Flow:" << result << "\n";
+    std::cout << "Normal Network: \t Flow:" << normalFlow << "\n";
+}
+
+void Menu::reportFailureSegmentMenu() {
+    std::cout << "======================================================" << std::endl << std::endl;
+    Edge * edge = getValidSegment("segment to fail");
+    auto mostAffectedStations = mostAffectedStationsOnSegmentFailure(graph, edge);
+    int topK = getIntegerInputFromUser("How many results do you want to display (top-k): ");
+    for(int i = 0; i < mostAffectedStations.size() && i < topK; i++){
+        std::cout << mostAffectedStations[i].first->getStation().getName() << " :\t" << 
+            abs(mostAffectedStations[i].second.first - mostAffectedStations[i].second.second) << "\n";
+    }
+
+}
+
+Vertex * Menu::getValidStation(std::string displayQuery)
+{
+    Vertex * v;
+    do{
+        std::cout << "Please select a " << displayQuery << " station: ";
+        std::string station;
+        std::getline(std::cin, station);
+        std::cout << "\n";
+        v = graph->findVertex(station);
+        if(v == nullptr) std::cout << "Invalid station name... please try again..\n\n";
+    } while(v == nullptr);
+    return v;
+}
+
+Edge * Menu::getValidSegment(std::string displayQuery)
+{
+    "========================\n\n";
+    std::cout << "Please select the " << displayQuery << "\n";
+    while(true){
+        Vertex * src = getValidStation("segment start");
+        Vertex * dst = getValidStation("segment end");
+        for(auto edge : src->getEdges()){
+            if(edge->getDest() == dst){
+                std::cout << "========================\n\n";
+                return edge;
+            } 
+        }
+        std::cout << src->getStation().getName() << " is not adjancent to " << dst->getStation().getName() 
+            << "... try again\n";
+    }
+}
+
+bool Menu::getBooleanInputFromUser(std::string displayString, bool defaultEnter) {
+    while(true){
+        std::cout << displayString;
+        char choice = 0;
+        std::cin >> choice;
+        if(choice == 0 || choice == 10 ){
+            return defaultEnter;
+        } else if(choice == 'y' || choice == 'Y'){
+            return true;
+        } else if ( choice == 'n' || choice == 'N'){
+            return false;
+        }
+        std::cout << "\n Option not valid... try again...\n";
+    }    
+}
+
+int Menu::getIntegerInputFromUser(std::string displayString)
+{
+    while (true)
+    {
+        int r = 0;
+        std::cout << displayString;
+        if((std::cin >> r).good()){
+            return r;
+        }
+        std::cout << "Invalid input... only a number is accepted... try again...\n";
+    }
+    
+}
+
 void Menu::mainMenu() {
     clearScreen();
     // WE WILL NEED THESE OPTIONS IN MENU 3:
@@ -43,6 +133,9 @@ void Menu::mainMenu() {
     std::cout << "======================================================" << std::endl;
     std::cout << "0. EXIT" << std::endl;
     printOptions(options);
+    
+    reportFailureSegmentMenu();
+    //maximumTrainsReducedConnectivityMenu();
 
     Vertex* src = graph->findVertex("Porto Campanhã");
     Vertex* dst = graph->findVertex("Coimbra B");
@@ -61,6 +154,7 @@ void Menu::mainMenu() {
     do {
         std::cout << "\nChoose an option: ";
         std::cin >> option;
+
     } while (!validOption(option, options.size()));
 
 }
