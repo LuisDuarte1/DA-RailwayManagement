@@ -8,6 +8,6 @@ int maximumTrainsReducedConnectivity(Graph *graph, std::vector<Edge *> segmentsT
 
 std::unordered_map<Vertex *, int> capacityOnFailureAllStations(Graph *graph, Edge * segmentToRemove);
 
-std::vector<std::pair<Vertex *, int>> mostAffectedStationsOnSegmentFailure(Graph * graph, Edge * segmentToRemove);
+std::vector<std::pair<Vertex *, std::pair<int,int>>> mostAffectedStationsOnSegmentFailure(Graph * graph, Edge * segmentToRemove);
 
 #endif

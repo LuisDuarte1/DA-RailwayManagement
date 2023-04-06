@@ -48,8 +48,8 @@ void Menu::reportFailureSegmentMenu() {
     auto mostAffectedStations = mostAffectedStationsOnSegmentFailure(graph, edge);
     int topK = getIntegerInputFromUser("How many results do you want to display (top-k): ");
     for(int i = 0; i < mostAffectedStations.size() && i < topK; i++){
-        std::cout << mostAffectedStations[i].first->getStation().getName() << " : " << 
-            mostAffectedStations[i].second << "\n";
+        std::cout << mostAffectedStations[i].first->getStation().getName() << " :\t" << 
+            abs(mostAffectedStations[i].second.first - mostAffectedStations[i].second.second) << "\n";
     }
 
 }
