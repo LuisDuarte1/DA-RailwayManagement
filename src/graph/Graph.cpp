@@ -148,7 +148,7 @@ int Graph::edmondsKarpSinkOnly (Vertex* dest) {
     addVertex(superSourceStation);
 
     for (auto v: vertexSet) {
-        if (v->getEdges().size() == 1)
+        if (v->getEdges().size() == 1 && v != dest)
             addEdge(superSourceStation.getName(), v->getStation().getName(), INT_MAX, "");
     }
     Vertex* superSource = findVertex(superSourceStation.getName());
