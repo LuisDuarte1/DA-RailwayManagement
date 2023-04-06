@@ -3,11 +3,16 @@
 
 #include <iomanip>
 #include <iostream>
+#include "DatasetLoader.h"
 
 class Menu {
 public:
 
     int auxMenu(int maxOption, int minOption);
+
+    static std::string toLowerString;
+
+    void clearScreen();
 
     int mainMenu();
 
@@ -21,7 +26,9 @@ public:
 
     void menuController();
 
-    int choiceK();
+    //int choiceK();
+
+    int dataLoaderMenu();
 
 };
 

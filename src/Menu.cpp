@@ -1,7 +1,10 @@
 #include "Menu.h"
 
-
 using namespace std;
+
+Graph* graph;
+string networkPath = DEFAULT_NETWORK_PATH;
+string stationsPath = DEFAULT_STATIONS_PATH;
 
 int Menu::auxMenu(int maxOption, int minOption){
     int op;
@@ -18,12 +21,26 @@ int Menu::auxMenu(int maxOption, int minOption){
     return op;
 }
 
+void Menu::clearScreen() {
+    std::cout << "\033[2J\033[1;1H";
+}
+
+int Menu::dataLoaderMenu(){
+    cout << endl << "DATA MANAGEMENT MENU \n" << endl;
+    cout << "1.Use default data (PT network)" << endl;
+    cout << "2.Use new data" << endl;
+    cout << "0.Return to main menu" << endl;
+    cout << "Choose an option: ";
+    return auxMenu(2,0);
+
+}
+
 int Menu::mainMenu() {
     cout << "\n";
     cout << "MAIN MENU\n\n";
-    cout << "1.Basic Service Metrics" << '\n' << "2.Operation Cost Optimization" << '\n' << "3.Reliability and Sensitivity to Line Failures" << '\n' << "4.About us" << '\n' << "0.Quit" << "\n\n";
+    cout << "1.Basic Service Metrics" << '\n' << "2.Operation Cost Optimization" << '\n' << "3.Reliability and Sensitivity to Line Failures" << '\n' << "4.Change dataset" << '\n' << "5.About us" << '\n' << "0.Quit" << "\n";
     cout << "Choose an option: ";
-    return auxMenu(4, 0);
+    return auxMenu(5, 0);
 }
 
 int Menu::AboutUsMenu(){
@@ -77,6 +94,7 @@ int Menu::choiceK(){
 
 void Menu::menuController() {
     int op;
+    graph = loadDataset(networkPath, stationsPath);
     cout << endl << "Welcome to the support platform for the management of railway transports!\n";
     do {
         int temp;
@@ -126,9 +144,65 @@ void Menu::menuController() {
                 }
 
                 case 4:{
+                    int control = dataLoaderMenu();
+                    do {
+                        switch (control) {
+                            case 1:{
+                                networkPath = DEFAULT_NETWORK_PATH;
+                                stationsPath = DEFAULT_STATIONS_PATH;
+                                graph = loadDataset(networkPath, stationsPath);
+                                control = 0;
+                                temp = 0;
+                                break;
+                            }
+
+                            case 2: {
+                                while (true) {
+                                    cout << "\nInsert the paths for new data: " << "\n" << "Path for network file: ";
+                                    cin >> networkPath;
+                                    cout << endl;
+
+                                    if (networkPath == "q" || networkPath == "Q"){
+                                        control = 1;
+                                        break;
+                                    }
+
+                                    cout << "Path for the stations file:";
+                                    cin >> stationsPath;
+                                    cout << endl;
+
+                                    if (stationsPath == "q" || stationsPath == "Q"){
+                                        control = 1;
+                                        break;
+                                    }
+
+                                    graph = loadDataset(networkPath, stationsPath);
+
+                                    if (graph != nullptr) break;
+
+                                    cout << "Make sure you entered the correct paths, write 'q' to revert to default data and go to main menu\n";
+                                }
+                                control = 0;
+                                temp = 0;
+                                break;
+                            }
+
+                            case 0:{
+                                temp = 0;
+                                break;
+                            }
+
+                        }
+
+                    }while(control != 0);
+                    break;
+                }
+
+                case 5:{
                     temp = AboutUsMenu();
                     break;
                 }
+
 
                 case 0:{
                     temp = 0;

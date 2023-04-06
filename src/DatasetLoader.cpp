@@ -8,12 +8,12 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
     std::ifstream stationFile(stationsPath);
 
     if(!networkFile.good()) {
-        std::cout << "Couldn't load file " << networkPath << "\n";
+        std::cout << "Couldn't load network file " << networkPath << "\n";
         return nullptr;
     }
 
     if(!stationFile.good()) {
-        std::cout << "Couldn't load file " << stationsPath << "\n";
+        std::cout << "Couldn't load stations file " << stationsPath << "\n";
         return nullptr;
     }
 
