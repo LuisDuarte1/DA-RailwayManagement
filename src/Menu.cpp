@@ -134,22 +134,43 @@ void Menu::mainMenu() {
     std::cout << "0. EXIT" << std::endl;
     printOptions(options);
     
-    reportFailureSegmentMenu();
+    //reportFailureSegmentMenu();
     //maximumTrainsReducedConnectivityMenu();
 
     Vertex* src = graph->findVertex("Porto Campanhã");
     Vertex* dst = graph->findVertex("Coimbra B");
     std::cout << "Max flow to sink node is "  << graph->edmondsKarpSinkOnly(dst) << std::endl;
     char option;
+    /*
     auto pair = graph->moreDemandingPairOfStations();
     for (auto el : pair.first) {
         std::cout << el.first->getStation().getName() << " " << el.second->getStation().getName() << " " << pair.second << std::endl;
     }
-    std::vector<std::string> municipalities;
-    graph->findTopKMunicipalities(municipalities, 6);
-    for (auto el : municipalities) {
-        std::cout << el << std::endl;
+    */
+    std::vector<std::pair<std::string, float>> municipalitiesHighestAverage;
+    std::vector<std::pair<std::string, int>> municipalitiesHighestBottleneck;
+    std::vector<std::pair<std::string, int>> municipalitesMoreStations;
+    graph->findTopK(municipalitiesHighestAverage, municipalitiesHighestBottleneck, municipalitesMoreStations, 5, false);
+
+    std::cout << "Municipalities with highest weighted average (stations with higher flow are more important to calculate the mean): " << std::endl;
+    for (auto el : municipalitiesHighestAverage) {
+        std::cout << el.first << " " << el.second << std::endl;
     }
+
+    std::cout << std::endl;
+
+    std::cout << "Municipalities with highest bottleneck: " << std::endl;
+    for (auto el : municipalitiesHighestBottleneck) {
+        std::cout << el.first << " " << el.second << std::endl;
+    }
+
+    std::cout << std::endl;
+
+    std::cout << "Municipalities with more stations: " << std::endl;
+    for (auto el : municipalitesMoreStations) {
+        std::cout << el.first << " " << el.second << std::endl;
+    }
+
 
     do {
         std::cout << "\nChoose an option: ";
