@@ -1,6 +1,9 @@
 #include <iostream>
 #include <unordered_map>
+#include <algorithm>
+#include <cmath>
 #include "Graph.h"
+#include "utils.h"
 
 Vertex* Graph::findVertex(const std::string &station) const {
     for (Vertex* v : vertexSet) {
@@ -147,13 +150,22 @@ int Graph::edmondsKarpSinkOnly (Vertex* dest) {
     Station superSourceStation("superSource", "", "", "", "");
     addVertex(superSourceStation);
 
+    resetFlow();
+
     for (auto v: vertexSet) {
-        if (v->getEdges().size() == 1)
+        if (v->getEdges().size() == 1 && v != dest)
             addEdge(superSourceStation.getName(), v->getStation().getName(), INT_MAX, "");
     }
     Vertex* superSource = findVertex(superSourceStation.getName());
     int maxFlow = edmondsKarp(superSource, dest);
-    vertexSet.pop_back(); // delete super source
+
+    for (Edge* e: superSource->getEdges()) {
+        Vertex* v = e->getDest();
+        superSource->removeEdge(v->getStation());
+    }
+    vertexSet.pop_back();
+
+    resetFlow();
 
     return maxFlow;
 }
@@ -183,72 +195,90 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
     return std::make_pair(maxStations, max);
 }
 
-void Graph::findTopKMunicipalities(std::vector<std::string> &municipalities, int k) {
-    std::unordered_map<std::string, int> municipalityFlows;
+void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeightedAverage,
+              std::vector<std::pair<std::string, int>> &highestBottleneck,
+              std::vector<std::pair<std::string, int>> &moreStations,
+              int k, bool useDistricts) {
 
-    for (auto v1 : vertexSet) {
-        for (auto v2 : vertexSet) {
-            if (v1 == v2) continue;
-            resetVisited();
-            DFS(v1);
-            if (v2->isVisited()) {
-                int thisFlow = edmondsKarp(v1, v2);
-                std::string municipality = v2->getStation().getMunicipality();
+    std::unordered_map<std::string, int> stationsPerArea;
+    std::unordered_map<std::string, int> bottlenecks;
+    std::unordered_map<std::string, std::vector<int>> flowsPerStation;
 
-                municipalityFlows[municipality] += thisFlow;
-            }
-        }
+    for (auto v : vertexSet) {
+        std::string area = useDistricts ? v->getStation().getDistrict() : v->getStation().getMunicipality();
+        stationsPerArea[area] = 0;
+        bottlenecks[area] = 0;
+        flowsPerStation[area] = std::vector<int>();
+    }
+
+    for (auto v : vertexSet) {
+        int maxFlow = edmondsKarpSinkOnly(v);
+        std::string area = useDistricts ? v->getStation().getDistrict() : v->getStation().getMunicipality();
+        if (maxFlow > bottlenecks[area]) bottlenecks[area] = maxFlow;
+        stationsPerArea[area] += 1;
+        flowsPerStation[area].push_back(maxFlow);
     }
 
     auto compare = [](std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
         return a.second > b.second;
     };
 
-    std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
-
-    for (const std::pair<std::string, int> municipality : municipalityFlows) {
-        pq.push(municipality);
-        if (pq.size() > k) pq.pop();
-    }
-
-    for (int i = 0; i < k; i++) {
-        municipalities.push_back(pq.top().first);
-        pq.pop();
-    }
-}
-
-void Graph::findTopKDistricts(std::vector<std::string> &districts, int k) {
-    std::unordered_map<std::string, int> districtFlows;
-
-    for (auto v1 : vertexSet) {
-        for (auto v2 : vertexSet) {
-            if (v1 == v2) continue;
-            resetVisited();
-            DFS(v1);
-            if (v2->isVisited()) {
-                int thisFlow = edmondsKarp(v1, v2);
-                std::string district = v2->getStation().getDistrict();
-
-                districtFlows[district] += thisFlow;
-            }
-        }
-    }
-
-    auto compare = [](std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
+    auto compared= [](std::pair<std::string, float> &a, std::pair<std::string, float> &b) {
         return a.second > b.second;
     };
 
+    std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>, decltype(compared)> pqd(compared);
     std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
 
-    for (const std::pair<std::string, int> district : districtFlows) {
-        pq.push(district);
+    for (const std::pair<std::string, std::vector<int>> area : flowsPerStation) {
+        std::vector<float> weights(area.second.size());
+        float weightSum = computeWeights(area.second, weights);
+        float weightedAverage = 0;
+        for (int i = 0; i < area.second.size(); i++) {
+            weightedAverage += weights[i] * area.second[i];
+        }
+        weightedAverage /= weightSum;
+        weightedAverage = std::round(weightedAverage * 100) / 100;
+        pqd.push(std::make_pair(area.first, weightedAverage));
+        if (pqd.size() > k) pqd.pop();
+    }
+
+    while (!pqd.empty()) {
+        maxFlowWeightedAverage.emplace_back(pqd.top());
+        pqd.pop();
+    }
+
+    for (const std::pair<std::string, int> area : bottlenecks) {
+        pq.push(area);
         if (pq.size() > k) pq.pop();
     }
 
-    for (int i = 0; i < k; i++) {
-        districts.push_back(pq.top().first);
+    while (!pq.empty()) {
+        highestBottleneck.push_back(pq.top());
         pq.pop();
     }
+
+    for (const std::pair<std::string, int> area : stationsPerArea) {
+        pq.push(area);
+        if (pq.size() > k) pq.pop();
+    }
+
+    while (!pq.empty()) {
+        moreStations.push_back(pq.top());
+        pq.pop();
+    }
+
+    std::sort(maxFlowWeightedAverage.begin(), maxFlowWeightedAverage.end(), [](const std::pair<std::string, float> &a, const std::pair<std::string, float> &b) {
+        return a.second > b.second;
+    });
+    std::sort(highestBottleneck.begin(), highestBottleneck.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+        return a.second > b.second;
+    });
+    std::sort(moreStations.begin(), moreStations.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+        return a.second > b.second;
+    });
+
+
 }
 
 void Graph::resetFlow() {

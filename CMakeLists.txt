@@ -15,4 +15,5 @@ add_executable(DA_RailwayManagement
         src/DatasetLoader.h
         src/main.cpp
         src/Station.cpp
-        src/Station.h src/Menu.cpp src/Menu.h)
+        src/Station.h src/Menu.cpp src/Menu.h
+        src/LineFailures.cpp src/LineFailures.h src/utils.cpp src/utils.h)
