@@ -19,19 +19,17 @@ public:
     void DFS(Vertex *source);
     void resetVisited();
     void resetFlow();
-    void testAndVisit(std::queue<Vertex*>& q, Edge* e, Vertex* w, double residual);
+    void testAndVisit(std::queue<Vertex*>& q, Edge* e, Vertex* w, float residual);
     bool findAugmentingPath(Vertex* source, Vertex* dest);
     int findMinResidualAlongPath(Vertex* source, Vertex* dest);
     void augmentFlowAlongPath(Vertex* source, Vertex* dest, int minResidual);
     int edmondsKarp(Vertex* source, Vertex* dest);
     int edmondsKarpSinkOnly(Vertex *dest);
-    void findTopKMunicipalities(std::vector<std::string> &municipalities, int k);
+    void findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeightedAverage,
+                         std::vector<std::pair<std::string, int>> &highestBottleneck,
+                         std::vector<std::pair<std::string, int>> &moreStations,
+                         int k, bool useDistricts);
     std::pair<std::vector<std::pair<Vertex*, Vertex*>>, int> moreDemandingPairOfStations();
-    // To apply Floyd-Warshall algorithm
-    double **distMatrix = nullptr;
-    int **pathMatrix = nullptr;
-
-    void findTopKDistricts(std::vector<std::string> &districts, int k);
 };
 
 

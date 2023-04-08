@@ -1,7 +1,15 @@
-#include <iostream>
 #include <unordered_map>
+#include <algorithm>
+#include <cmath>
 #include "Graph.h"
+#include "utils.h"
 
+/**
+ * @brief Finds a vertex with a given station name
+ * Time Complexity: O(|V|) being |V| the number of vertices in the graph
+ * @param station Station name
+ * @return Pointer to vertex or nullptr if not found
+ */
 Vertex* Graph::findVertex(const std::string &station) const {
     for (Vertex* v : vertexSet) {
         if (v->getStation().getName() == station) {
@@ -11,6 +19,12 @@ Vertex* Graph::findVertex(const std::string &station) const {
     return nullptr;
 }
 
+/**
+ * @brief Adds a vertex to the graph
+ * Time Complexity: O(|V|) being |V| the number of vertices in the graph
+ * @param station object Station
+ * @return true if vertex was added, false if it already exists
+ */
 bool Graph::addVertex(const Station &station) {
     if (findVertex(station.getName()) != nullptr)
         return false;
@@ -18,6 +32,16 @@ bool Graph::addVertex(const Station &station) {
     return true;
 }
 
+
+/**
+ * @brief Adds an edge to the graph
+ * Time Complexity: O(|V|) being |V| the number of vertices in the graph
+ * @param origin Name of the origin station
+ * @param dest  Name of the destination station
+ * @param weight Capacity of segment
+ * @param service Service of the edge to be added
+ * @return true if edge was added, false if it already exists
+ */
 bool Graph::addEdge(const std::string &origin, const std::string &dest, int weight, const std::string &service) {
     Vertex* v1 = findVertex(origin);
     Vertex* v2 = findVertex(dest);
@@ -27,6 +51,15 @@ bool Graph::addEdge(const std::string &origin, const std::string &dest, int weig
     return true;
 }
 
+/**
+ * @brief Adds a bidirectional edge to the graph
+ * Time Complexity: O(|V|) being |V| the number of vertices in the graph
+ * @param origin Name of the origin station
+ * @param dest Name of the destination station
+ * @param weight Capacity of segment
+ * @param service Service of the edge to be added
+ * @return true if edge was added, false if it already exists
+ */
 bool Graph::addBidirectionalEdge(const std::string &origin, const std::string &dest, int weight,
                                  const std::string &service) {
     Vertex* v1 = findVertex(origin);
@@ -41,14 +74,29 @@ bool Graph::addBidirectionalEdge(const std::string &origin, const std::string &d
     return true;
 }
 
+/**
+ * @brief Gets the number of vertices in the graph
+ * Time Complexity: O(1)
+ * @return Number of vertices
+ */
 int Graph::getNumVertex() const {
     return vertexSet.size();
 }
 
+/**
+ * @brief Gets the edges of the graph
+ * Time Complexity: O(|V|) being |V| the number of vertices in the graph
+ * @return Vector of edges
+ */
 std::vector<Vertex*> Graph::getVertexSet() const {
     return vertexSet;
 }
 
+/**
+ * @brief Performs a Depth-First Search on the graph
+ * Time Complexity: O(|V| + |E|) being |V| the number of vertices and |E| the number of edges in the graph
+ * @param source Pointer to the source vertex
+ */
 void Graph::DFS(Vertex* source) {
     source->setVisited(true);
     for (auto e: source->getEdges()) {
@@ -58,13 +106,25 @@ void Graph::DFS(Vertex* source) {
     }
 }
 
+/**
+ * @brief Resets the visited flag of all vertices
+ * Time Complexity: O(|V|) being |V| the number of vertices in the graph
+ */
 void Graph::resetVisited() {
     for (auto v: vertexSet) {
         v->setVisited(false);
     }
 }
 
-void Graph::testAndVisit(std::queue<Vertex *> &q, Edge *e, Vertex *w, double residual) {
+/**
+ * @brif Helper function for Edmonds-Karp algorithm that marks vertices as visited and set paths if there is residual capacity
+ * Time Complexity: O(1)
+ * @param q Queue of vertices
+ * @param e Edge to be considered
+ * @param w Vertex to be considered
+ * @param residual Residual capacity of the edge
+ */
+void Graph::testAndVisit(std::queue<Vertex *> &q, Edge *e, Vertex *w, float residual) {
     if (!w->isVisited() && residual > 0) {
         w->setVisited(true);
         w->setPath(e);
@@ -72,6 +132,13 @@ void Graph::testAndVisit(std::queue<Vertex *> &q, Edge *e, Vertex *w, double res
     }
 }
 
+/**
+ * @brief Finds the minimum residual capacity along a path
+ * Time Complexity: O(|V|) being |V| the number of vertices in the path
+ * @param source Pointer to the source vertex
+ * @param dest Pointer to the destination vertex
+ * @return Minimum residual capacity
+ */
 int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
     int minResidual = INT_MAX;
     for (Vertex* v = dest; v != source;) {
@@ -88,7 +155,13 @@ int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
     return minResidual;
 }
 
-
+/**
+ * @brief Performs BFS to find an augmenting path in the graph from source to destination
+ * Time Complexity: O(|V| + |E|) being |V| the number of vertices and |E| the number of edges in the graph
+ * @param source Pointer to the source vertex
+ * @param dest Pointer to the destination vertex
+ * @return true if there is an augmenting path, false otherwise
+ */
 bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
     for (Vertex* v : vertexSet) {
         v->setVisited(false);
@@ -109,6 +182,13 @@ bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
     return dest->isVisited();
 }
 
+/**
+ * @briefs Augments the flow along a path
+ * Time Complexity: O(|V|) being |V| the number of vertices in the path
+ * @param source Pointer to the source vertexo
+ * @param dest Pointer to the destination vertex
+ * @param minResidual Minimum residual capacity of the path
+ */
 void Graph::augmentFlowAlongPath(Vertex *source, Vertex *dest, int minResidual) {
     for (Vertex* v = dest; v != source;) {
         Edge* e = v->getPath();
@@ -123,6 +203,13 @@ void Graph::augmentFlowAlongPath(Vertex *source, Vertex *dest, int minResidual) 
     }
 }
 
+/**
+ * @brief Finds the maximum flow in the graph from source to destination using Edmonds-Karp algorithm
+ * Time Complexity: O(|V||E|^2) being |V| the number of vertices and |E| the number of edges in the graph
+ * @param source Pointer to the source vertex
+ * @param dest Pointer to the destination vertex
+ * @return Maximum flow in the graph
+ */
 int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
     if (source == nullptr || dest == nullptr || source == dest) {
         return -1;
@@ -143,9 +230,17 @@ int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
     return max_flow;
 }
 
+/**
+ * @brief Finds the maximum flow that can reach the destination vertex using Edmonds-Karp algorithm
+ * Time Complexity: O(|V||E|^2) being |V| the number of vertices and |E| the number of edges in the graph
+ * @param dest Pointer to the destination vertex
+ * @return Maximum flow that can reach the destination vertex
+ */
 int Graph::edmondsKarpSinkOnly (Vertex* dest) {
     Station superSourceStation("superSource", "", "", "", "");
     addVertex(superSourceStation);
+
+    resetFlow();
 
     for (auto v: vertexSet) {
         if (v->getEdges().size() == 1 && v != dest)
@@ -153,11 +248,23 @@ int Graph::edmondsKarpSinkOnly (Vertex* dest) {
     }
     Vertex* superSource = findVertex(superSourceStation.getName());
     int maxFlow = edmondsKarp(superSource, dest);
-    vertexSet.pop_back(); // delete super source
+
+    for (Edge* e: superSource->getEdges()) {
+        Vertex* v = e->getDest();
+        superSource->removeEdge(v->getStation());
+    }
+    vertexSet.pop_back();
+
+    resetFlow();
 
     return maxFlow;
 }
 
+/**
+ * @brief Finds the most demanding pair of stations in the graph in terms of maximum flow
+ * Time Complexity: O(|V|³|E|²) being |V| the number of vertices and |E| the number of edges in the graph
+ * @return A pair containing a vector with the most demanding pairs of stations and the maximum flow
+ */
 std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingPairOfStations() {
     int max = INT_MIN;
     std::vector<std::pair<Vertex *, Vertex *>> maxStations;
@@ -183,74 +290,105 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
     return std::make_pair(maxStations, max);
 }
 
-void Graph::findTopKMunicipalities(std::vector<std::string> &municipalities, int k) {
-    std::unordered_map<std::string, int> municipalityFlows;
+/**
+ * @brief Gives Top K stations in terms of maximum flow weighted mean, highest bottleneck and more stations for further analysis
+ * Time Complexity: O(|V||E|^2) being |V| the number of vertices and |E| the number of edges in the graph
+ * @param maxFlowWeightedAverage Vector to store the top K stations in terms of maximum flow weighted mean
+ * @param highestBottleneck Vector to store the top K stations in terms of highest bottleneck
+ * @param moreStations Vector to store the top K stations in terms of number of stations
+ * @param k
+ * @param useDistricts
+ */
+void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeightedAverage,
+              std::vector<std::pair<std::string, int>> &highestBottleneck,
+              std::vector<std::pair<std::string, int>> &moreStations,
+              int k, bool useDistricts) {
 
-    for (auto v1 : vertexSet) {
-        for (auto v2 : vertexSet) {
-            if (v1 == v2) continue;
-            resetVisited();
-            DFS(v1);
-            if (v2->isVisited()) {
-                int thisFlow = edmondsKarp(v1, v2);
-                std::string municipality = v2->getStation().getMunicipality();
+    std::unordered_map<std::string, int> stationsPerArea;
+    std::unordered_map<std::string, int> bottlenecks;
+    std::unordered_map<std::string, std::vector<int>> flowsPerStation;
 
-                municipalityFlows[municipality] += thisFlow;
-            }
-        }
+    for (auto v : vertexSet) {
+        std::string area = useDistricts ? v->getStation().getDistrict() : v->getStation().getMunicipality();
+        stationsPerArea[area] = 0;
+        bottlenecks[area] = 0;
+        flowsPerStation[area] = std::vector<int>();
+    }
+
+    for (auto v : vertexSet) {
+        int maxFlow = edmondsKarpSinkOnly(v);
+        std::string area = useDistricts ? v->getStation().getDistrict() : v->getStation().getMunicipality();
+        if (maxFlow > bottlenecks[area]) bottlenecks[area] = maxFlow;
+        stationsPerArea[area] += 1;
+        flowsPerStation[area].push_back(maxFlow);
     }
 
     auto compare = [](std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
         return a.second > b.second;
     };
 
-    std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
-
-    for (const std::pair<std::string, int> municipality : municipalityFlows) {
-        pq.push(municipality);
-        if (pq.size() > k) pq.pop();
-    }
-
-    for (int i = 0; i < k; i++) {
-        municipalities.push_back(pq.top().first);
-        pq.pop();
-    }
-}
-
-void Graph::findTopKDistricts(std::vector<std::string> &districts, int k) {
-    std::unordered_map<std::string, int> districtFlows;
-
-    for (auto v1 : vertexSet) {
-        for (auto v2 : vertexSet) {
-            if (v1 == v2) continue;
-            resetVisited();
-            DFS(v1);
-            if (v2->isVisited()) {
-                int thisFlow = edmondsKarp(v1, v2);
-                std::string district = v2->getStation().getDistrict();
-
-                districtFlows[district] += thisFlow;
-            }
-        }
-    }
-
-    auto compare = [](std::pair<std::string, int> &a, std::pair<std::string, int> &b) {
+    auto compared= [](std::pair<std::string, float> &a, std::pair<std::string, float> &b) {
         return a.second > b.second;
     };
 
+    std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>, decltype(compared)> pqd(compared);
     std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
 
-    for (const std::pair<std::string, int> district : districtFlows) {
-        pq.push(district);
+    for (const std::pair<std::string, std::vector<int>> area : flowsPerStation) {
+        std::vector<float> weights(area.second.size());
+        float weightSum = computeWeights(area.second, weights);
+        float weightedAverage = 0;
+        for (int i = 0; i < area.second.size(); i++) {
+            weightedAverage += weights[i] * area.second[i];
+        }
+        weightedAverage /= weightSum;
+        weightedAverage = std::round(weightedAverage * 100) / 100;
+        pqd.push(std::make_pair(area.first, weightedAverage));
+        if (pqd.size() > k) pqd.pop();
+    }
+
+    while (!pqd.empty()) {
+        maxFlowWeightedAverage.emplace_back(pqd.top());
+        pqd.pop();
+    }
+
+    for (const std::pair<std::string, int> area : bottlenecks) {
+        pq.push(area);
         if (pq.size() > k) pq.pop();
     }
 
-    for (int i = 0; i < k; i++) {
-        districts.push_back(pq.top().first);
+    while (!pq.empty()) {
+        highestBottleneck.push_back(pq.top());
         pq.pop();
     }
+
+    for (const std::pair<std::string, int> area : stationsPerArea) {
+        pq.push(area);
+        if (pq.size() > k) pq.pop();
+    }
+
+    while (!pq.empty()) {
+        moreStations.push_back(pq.top());
+        pq.pop();
+    }
+
+    std::sort(maxFlowWeightedAverage.begin(), maxFlowWeightedAverage.end(), [](const std::pair<std::string, float> &a, const std::pair<std::string, float> &b) {
+        return a.second > b.second;
+    });
+    std::sort(highestBottleneck.begin(), highestBottleneck.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+        return a.second > b.second;
+    });
+    std::sort(moreStations.begin(), moreStations.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+        return a.second > b.second;
+    });
+
+
 }
 
+/**
+ * @brief Resets the flow of all edges in the graph
+ * Time Complexity: O(|V||E|) being |E| the number of edges in the graph
+ */
 void Graph::resetFlow() {
     for (auto v : vertexSet) {
         for (auto e : v->getEdges()) {

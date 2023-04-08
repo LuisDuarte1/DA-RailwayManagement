@@ -16,4 +16,4 @@ add_executable(DA_RailwayManagement
         src/main.cpp
         src/Station.cpp
         src/Station.h src/Menu.cpp src/Menu.h
-        src/LineFailures.cpp src/LineFailures.h)
+        src/LineFailures.cpp src/LineFailures.h src/utils.cpp src/utils.h)
