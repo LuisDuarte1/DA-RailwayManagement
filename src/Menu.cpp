@@ -110,7 +110,7 @@ int Menu::bsmMenu(){
 
 int Menu::ocoMenu(){
     cout << endl << "OPERATION COST OPTIMIZATION MENU\n";
-    cout << endl << "1.choose station \n";
+    cout << endl << "1.Choose station \n";
     cout << "0.Return to main menu\n";
     return auxMenu(1,0);
 }
@@ -167,8 +167,27 @@ void Menu::menuController() {
 
                 case 3:{
                     int control = rsMenu();
+                    bool stayInMenu;
                     do{
                         switch (control) {
+
+                            case 1 : {
+                                maximumTrainsReducedConnectivityMenu();
+                                getBooleanInputFromUser("Do you wish to continue on this menu ?", stayInMenu);
+                                if (stayInMenu){
+                                    break;
+                                }
+                                else{
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
+                            }
+
+                            case 2: {
+
+                            }
+
                             case 0 : {
                                 temp = 0;
                             }
