@@ -4,10 +4,10 @@
 void graphInitCost(Graph* graph){
     for(auto vertex : graph->getVertexSet()){
         for(auto edge : vertex->getEdges()){
-            if(edge->getService() == "ALFA"){
-                edge->setCost(4);
-            } else {
+            if(edge->getService() == "STANDARD"){
                 edge->setCost(2);
+            } else {
+                edge->setCost(4);
             }
         }
     }
