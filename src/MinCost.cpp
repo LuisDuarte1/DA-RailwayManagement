@@ -41,15 +41,17 @@ void findShortestPath(Graph * graph, Vertex* src, Vertex* dst){
     }
 }
 
-std::vector<Edge*> getShortestPath(Vertex * dst, Vertex * src){
+std::pair<std::vector<Edge*>, bool> getShortestPath(Vertex * dst, Vertex * src){
     std::vector<Edge*> res;
     Edge * path = dst->getPath();
+    if(path == nullptr) return {res, false};
     while(path->getOrigin() != src){
         res.push_back(path);
         path = path->getOrigin()->getPath();
+        if(path == nullptr) return {res, false};
     }
     res.push_back(path);
-    return res;
+    return {res, true};
 }
 
 int calculateCostOfPath(std::vector<Edge*> path){
@@ -86,8 +88,12 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::vector<Edge*>>
         edge->setCost(INT_MAX);
         findShortestPath(graph, src, dst);
         auto path = getShortestPath(dst, src);
-        possible_paths.push_back(path);
-        path_cost.push_back(calculateCostOfPath(path));
+        if(!path.second) {
+            edge->setCost(prev_cost);
+            continue;
+        }
+        possible_paths.push_back(path.first);
+        path_cost.push_back(calculateCostOfPath(path.first));
         path_flow.push_back(graph->findMinResidualAlongPath(src, dst));
         edge->setCost(prev_cost);
     }
@@ -109,6 +115,7 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::vector<Edge*>>
 std::vector<std::vector<Edge*>> getMinCostPaths(Graph* graph, Vertex * src, Vertex * dst){
     graphInitCost(graph);
     int networkService = graph->edmondsKarp(src, dst);
+    if(networkService == 0) return {};
     graph->resetFlow();
     graph->resetVisited();
 
@@ -119,10 +126,10 @@ std::vector<std::vector<Edge*>> getMinCostPaths(Graph* graph, Vertex * src, Vert
     int flow = graph->findMinResidualAlongPath(src, dst);
     graph->augmentFlowAlongPath(src, dst, flow);
     flow_remaining -= flow;
-    res.push_back(path);
+    res.push_back(path.first);
     if(flow_remaining <= 0){
         return res;
     }
-    sucessiveShortestPath(flow_remaining, res, path, graph, src, dst, {});
+    sucessiveShortestPath(flow_remaining, res, path.first, graph, src, dst, {});
     return res;
 }
