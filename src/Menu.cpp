@@ -1,10 +1,12 @@
 #include "Menu.h"
+#include "LineFailures.h"
 
 using namespace std;
 
 Graph* graph;
 string networkPath = DEFAULT_NETWORK_PATH;
 string stationsPath = DEFAULT_STATIONS_PATH;
+bool stayInMenu;
 
 int Menu::auxMenu(int maxOption, int minOption) {
     int op;
@@ -41,45 +43,6 @@ int Menu::mainMenu() {
     cout << "1.Basic Service Metrics" << '\n' << "2.Operation Cost Optimization" << '\n' << "3.Reliability and Sensitivity to Line Failures" << '\n' << "4.Change dataset" << '\n' << "5.About us" << '\n' << "0.Quit" << "\n";
     cout << "Choose an option: ";
 
-    //reportFailureSegmentMenu();
-    //maximumTrainsReducedConnectivityMenu();
-
-    Vertex *src = graph->findVertex("Porto Campanhã");
-    Vertex *dst = graph->findVertex("Coimbra B");
-    std::cout << "Max flow to sink node is " << graph->edmondsKarpSinkOnly(dst) << std::endl;
-    char option;
-    /*
-    auto pair = graph->moreDemandingPairOfStations();
-    for (auto el : pair.first) {
-        std::cout << el.first->getStation().getName() << " " << el.second->getStation().getName() << " " << pair.second << std::endl;
-    }
-    */
-    std::vector<std::pair<std::string, float>> municipalitiesHighestAverage;
-    std::vector<std::pair<std::string, int>> municipalitiesHighestBottleneck;
-    std::vector<std::pair<std::string, int>> municipalitesMoreStations;
-    graph->findTopK(municipalitiesHighestAverage, municipalitiesHighestBottleneck, municipalitesMoreStations, 5, false);
-
-    std::cout
-            << "Municipalities with highest weighted average (stations with higher flow are more important to calculate the mean): "
-            << std::endl;
-    for (auto el: municipalitiesHighestAverage) {
-        std::cout << el.first << " " << el.second << std::endl;
-    }
-
-    std::cout << std::endl;
-
-    std::cout << "Municipalities with highest bottleneck: " << std::endl;
-    for (auto el: municipalitiesHighestBottleneck) {
-        std::cout << el.first << " " << el.second << std::endl;
-    }
-
-    std::cout << std::endl;
-
-    std::cout << "Municipalities with more stations: " << std::endl;
-    for (auto el: municipalitesMoreStations) {
-        std::cout << el.first << " " << el.second << std::endl;
-    }
-
     return auxMenu(5, 0);
 }
 
@@ -99,8 +62,8 @@ int Menu::AboutUsMenu(){
 int Menu::bsmMenu(){
     cout << endl << "BASIC SERVICE METRICS MENU\n" << endl;
     cout << "1.Maximum trains travelling simultaneously between two stations\n"
-    << "2.Pairs of stations requiring the most amount of trains\n"
-    << "3.Stations requiring larger budgets\n"
+    << "2.Pair of stations requiring the most amount of trains\n"
+    << "3.Top-k stations requiring larger budgets\n"
     << "4.Maximum number of trains that can simultaneously arrive at a station\n"
     <<  "0.Return to main menu\n" << endl;
     cout << "Choose an option: ";
@@ -118,18 +81,11 @@ int Menu::ocoMenu(){
 int Menu::rsMenu(){
     cout << endl << "RELIABILITY AND SENSITIVITY TO FAILURES MENU\n";
     cout << endl << "1.Maximum number of trains that can simultaneously travel between two stations in a reduced connectivity network\n";
-    cout << "2.Top-k most affected stations by segment failure\n";
+    cout << "2.Most affected stations by segment failure\n";
     cout << "0.Return to main menu\n";
     cout << endl << "Choose an option: ";
     return auxMenu(2,0);
 }
-
-/*
-int Menu::choiceK(){
-    cout << endl << "Type a value for k: ";
-    return auxMenu(3019,1);
-}
-*/
 
 void Menu::menuController() {
     int op;
@@ -144,9 +100,84 @@ void Menu::menuController() {
                     int control = bsmMenu();
                     do{
                         switch (control) {
+
+                            case 1: {
+                                cout << endl;
+                                Vertex * src = getValidStationv2("first");
+                                Vertex * dst = getValidStationv2("second");
+                                int result = graph->edmondsKarp(src, dst);
+                                cout << "The max amount of trains travelling simultaneously between " << src->getStation().getName() << " and " << dst->getStation().getName() << " is " << result << endl;
+                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu (y/n) ?", true);
+                                if (stayInMenu){
+                                    temp = 1;
+                                    control = 0;
+                                    break;
+                                }
+                                else{
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
+                            }
+
+                            case 2: {
+                                std::cout << std::endl;
+                                std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> result;
+                                result = graph->moreDemandingPairOfStations();
+                                cout << "The most demanding pair of stations is " << result.first[0].first->getStation().getName() << " and " << result.first[0].second->getStation().getName() << " with " << result.second << " trains \n";
+                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu (y/n) ?", true);
+                                if (stayInMenu){
+                                    temp = 1;
+                                    control = 0;
+                                    break;
+                                }
+                                else{
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
+
+                            }
+
+                            case 3: {
+                                std::cout << std::endl;
+                                int k = getIntegerInputFromUser("Choose the value for k: ");
+                                cout << endl;
+                                bool useDistrict = getBooleanInputFromUser("Do you wish to see the result district-wise or municipality-wise (d or m respectively) ?", true);
+                                std::cout << std::endl;
+                                displayTopK(k, useDistrict);
+                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu and alter the settings ?", true);
+                                if (stayInMenu){
+                                    break;
+                                }
+                                else{
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
+                            }
+
+                            case 4:{
+                                cout << endl;
+                                Vertex * st = getValidStationv2("desired");
+                                int result = graph->edmondsKarpSinkOnly(st);
+                                cout << "The maximum amount of trains that can arrive at " << st->getStation().getName() << " is " << result << endl;
+                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu and alter the station ?", true);
+                                if (stayInMenu){
+                                    break;
+                                }
+                                else{
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
+                            }
+
                             case 0 : {
                                 temp = 0;
                             }
+
+                            default: break;
 
                         }
                     }while(control != 0);
@@ -167,13 +198,12 @@ void Menu::menuController() {
 
                 case 3:{
                     int control = rsMenu();
-                    bool stayInMenu;
                     do{
                         switch (control) {
 
                             case 1 : {
                                 maximumTrainsReducedConnectivityMenu();
-                                getBooleanInputFromUser("Do you wish to continue on this menu ?", stayInMenu);
+                                stayInMenu = getBooleanInputFromUser("Do you wish to continue on this menu ?", true);
                                 if (stayInMenu){
                                     break;
                                 }
@@ -185,12 +215,28 @@ void Menu::menuController() {
                             }
 
                             case 2: {
+                                cout << endl;
+                                Edge* segment = getValidSegment("desired segment");
+                                std::vector<std::pair<Vertex *, std::pair<int,int>>> result;
+                                result = mostAffectedStationsOnSegmentFailure(graph, segment);
+                                cout << "The most affected station on the removal of the chosen segment is " << result[0].first->getStation().getName() << " changing from " << result[0].second.second << " to " << result[0].second.first << endl;
+                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu and alter the segment ?", true);
+                                if (stayInMenu){
+                                    break;
+                                }
+                                else{
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
 
                             }
 
                             case 0 : {
                                 temp = 0;
                             }
+
+                            default:break;
                         }
                     }while(control != 0);
                     break;
@@ -262,6 +308,8 @@ void Menu::menuController() {
                     break;
                 }
 
+                default: break;
+
             }
 
         } while (temp != 0);
@@ -299,9 +347,10 @@ void Menu::reportFailureSegmentMenu() {
     }
 }
 
-Vertex * Menu::getValidStation(std::string displayQuery) {
-    Vertex * v;
-    do{
+Vertex* Menu::getValidStation(std::string displayQuery) {
+    std::cin.sync();
+    Vertex* v;
+    do {
         std::cout << "Please select a " << displayQuery << " station: ";
         std::string station;
         std::getline(std::cin, station);
@@ -311,6 +360,21 @@ Vertex * Menu::getValidStation(std::string displayQuery) {
     } while(v == nullptr);
     return v;
 }
+
+Vertex* Menu::getValidStationv2(std::string displayQuery) {
+    std::cin.sync();
+    Vertex* v;
+    do {
+        std::cout << "Please select the " << displayQuery << " station: ";
+        std::string station;
+        std::getline(std::cin, station);
+        std::cout << "\n";
+        v = graph->findVertex(station);
+        if(v == nullptr) std::cout << "Invalid station name... please try again..\n\n";
+    } while(v == nullptr);
+    return v;
+}
+
 
 Edge * Menu::getValidSegment(std::string displayQuery) {
     std::cout << "Please select the " << displayQuery << "\n";
@@ -330,6 +394,8 @@ Edge * Menu::getValidSegment(std::string displayQuery) {
 
 bool Menu::getBooleanInputFromUser(std::string displayString, bool defaultEnter) {
     while(true){
+        cin.clear();
+        cin.sync();
         std::cout << displayString;
         char choice = 0;
         std::cin >> choice;
@@ -339,7 +405,12 @@ bool Menu::getBooleanInputFromUser(std::string displayString, bool defaultEnter)
             return true;
         } else if ( choice == 'n' || choice == 'N'){
             return false;
+        } else if ( choice == 'd' || choice == 'D'){
+            return true;
+        } else if ( choice == 'm' || choice == 'M'){
+            return false;
         }
+
         std::cout << "\n Option not valid... try again...\n";
     }
 }
@@ -348,10 +419,59 @@ int Menu::getIntegerInputFromUser(std::string displayString) {
     while (true) {
         int r = 0;
         std::cout << displayString;
-        if((std::cin >> r).good()){
+        if((std::cin >> r).good() && r < graph->getNumVertex()){
             return r;
         }
         std::cout << "Invalid input... only a number is accepted... try again...\n";
     }
+}
+
+void Menu::displayTopK(int k, bool useDistricts){
+    std::vector<std::pair<std::string, float>> municipalitiesHighestAverage;
+    std::vector<std::pair<std::string, int>> municipalitiesHighestBottleneck;
+    std::vector<std::pair<std::string, int>> municipalitiesMoreStations;
+    graph->findTopK(municipalitiesHighestAverage, municipalitiesHighestBottleneck, municipalitiesMoreStations, k, useDistricts);
+
+
+    const int tableWidth = 80;
+
+    std::cout << std::setfill(' ') << std::left << std::setw(50) << "Municipalities with highest weighted average (stations with higher flow are more important to calculate the mean): \n"
+              << std::setfill('=') << std::right << std::setw(tableWidth) << "" << std::endl;
+    std::cout << std::setfill(' ') << std::left << std::setw(50) << "Municipality"
+              << std::setfill(' ') << std::right << std::setw(30) << "Value" << std::endl;
+    std::cout << std::setfill('-') << std::setw(tableWidth) << "" << std::endl;
+    for (auto el: municipalitiesHighestAverage) {
+        std::cout << std::setfill(' ') << std::left << std::setw(50) << el.first
+                  << std::setfill(' ') << std::right << std::setw(30) << el.second << std::endl;
+    }
+    std::cout << std::setfill('=') << std::setw(tableWidth) << "" << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << std::setfill(' ') << std::left << std::setw(50) << "Municipalities with highest bottleneck: "
+              << std::setfill(' ') << std::right << std::setw(30) << "" << std::endl;
+    std::cout << std::setfill('=') << std::setw(tableWidth) << "" << std::endl;
+    std::cout << std::setfill(' ') << std::left << std::setw(50) << "Municipality"
+              << std::setfill(' ') << std::right << std::setw(30) << "Value" << std::endl;
+    std::cout << std::setfill('-') << std::setw(tableWidth) << "" << std::endl;
+    for (auto el: municipalitiesHighestBottleneck) {
+        std::cout << std::setfill(' ') << std::left << std::setw(50) << el.first
+                  << std::setfill(' ') << std::right << std::setw(30) << el.second << std::endl;
+    }
+    std::cout << std::setfill('=') << std::setw(tableWidth) << "" << std::endl;
+
+    std::cout << std::endl;
+
+    std::cout << std::setfill(' ') << std::left << std::setw(50) << "Municipalities with more stations: "
+              << std::setfill(' ') << std::right << std::setw(30) << "" << std::endl;
+    std::cout << std::setfill('=') << std::setw(tableWidth) << "" << std::endl;
+    std::cout << std::setfill(' ') << std::left << std::setw(50) << "Municipality"
+              << std::setfill(' ') << std::right << std::setw(30) << "Value" << std::endl;
+    std::cout << std::setfill('-') << std::setw(tableWidth) << "" << std::endl;
+    for (auto el: municipalitiesMoreStations) {
+        std::cout << std::setfill(' ') << std::left << std::setw(50) << el.first
+                  << std::setfill(' ') << std::right << std::setw(30) << el.second << std::endl;
+    }
+    std::cout << std::setfill('=') << std::setw(tableWidth) << "" << std::endl;
 }
 
