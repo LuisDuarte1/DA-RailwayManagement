@@ -30,7 +30,23 @@ public:
     void setProcessing(bool _processing);
     void setInDegree(unsigned int _inDegree);
     void setPath(Edge* _path);
+
+    /**
+     * Adds a new outgoing edge to the vertex/station
+     * Time Complexity: O(1)
+     * @param dest Destination of the edge
+     * @param weight Weight of the edge
+     * @param service Service of the edge
+     * @return Pointer to the new edge
+     */
     Edge* addEdge(Vertex* dest, int weight, const std::string& service);
+
+    /**
+     * Removes an edge with a given destination from the vertex/station
+     * Time Complexity: O(i*o) being i the number of incoming edges and o the number of outgoing edges
+     * @param des Station to remove the edge to
+     * @return True if the edge was removed, false otherwise
+     */
     bool removeEdge(const Station& dest);
     bool operator==(const Vertex& vertex) const;
 
