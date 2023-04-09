@@ -93,9 +93,6 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::vector<Edge*>>
     }
 
     int minIndex = std::distance(path_cost.begin(), std::min_element(path_cost.begin(), path_cost.end()));
-    if(std::count(path_cost.begin(), path_cost.end(), path_cost[minIndex]) != 0){
-        //we must find the 2 one
-    }
     flow_Remaining -= path_flow[minIndex];
     auto minPath = possible_paths[minIndex];
     res.push_back(minPath);
