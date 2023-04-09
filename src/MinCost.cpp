@@ -69,7 +69,7 @@ void reconstructPath(std::vector<Edge*> path){
 }
 
 
-void sucessiveShortestPath(int & flow_Remaining, std::vector<std::vector<Edge*>> & res, std::vector<Edge*> path, 
+void sucessiveShortestPath(int & flow_Remaining, std::vector<std::pair<std::vector<Edge*>, int>> & res, std::vector<Edge*> path, 
     Graph * graph, Vertex * src, Vertex * dst, std::vector<std::vector<Edge*>> other_solutions){
 
     //if the required flow is superior to 1 we need to find the second shortest path and so on
@@ -101,7 +101,7 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::vector<Edge*>>
     int minIndex = std::distance(path_cost.begin(), std::min_element(path_cost.begin(), path_cost.end()));
     flow_Remaining -= path_flow[minIndex];
     auto minPath = possible_paths[minIndex];
-    res.push_back(minPath);
+    res.push_back({minPath, path_flow[minIndex]});
     if(flow_Remaining <= 0){
         return;
     }
@@ -112,7 +112,7 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::vector<Edge*>>
 }
 
 
-std::vector<std::vector<Edge*>> getMinCostPaths(Graph* graph, Vertex * src, Vertex * dst){
+std::vector<std::pair<std::vector<Edge*>, int>> getMinCostPaths(Graph* graph, Vertex * src, Vertex * dst){
     graphInitCost(graph);
     int networkService = graph->edmondsKarp(src, dst);
     if(networkService == 0) return {};
@@ -120,13 +120,13 @@ std::vector<std::vector<Edge*>> getMinCostPaths(Graph* graph, Vertex * src, Vert
     graph->resetVisited();
 
     int flow_remaining = networkService;
-    std::vector<std::vector<Edge*>> res;
+    std::vector<std::pair<std::vector<Edge*>, int>> res;
     findShortestPath(graph, src, dst);
     auto path = getShortestPath(dst, src);
     int flow = graph->findMinResidualAlongPath(src, dst);
     graph->augmentFlowAlongPath(src, dst, flow);
     flow_remaining -= flow;
-    res.push_back(path.first);
+    res.push_back({path.first, flow});
     if(flow_remaining <= 0){
         return res;
     }

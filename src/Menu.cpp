@@ -284,23 +284,21 @@ void Menu::minCostMenu() {
     for(auto path : answers){
         graph->resetFlow();
         graph->resetVisited();
-        int cost = calculateCostOfPath(path);
-        reconstructPath(path);
-        int numberOfTrains = graph->findMinResidualAlongPath(src, dst);
-        std::cout << "This path should be done with " << numberOfTrains << " trains.\n";
+        int cost = calculateCostOfPath(path.first);
+        std::cout << "This path should be done with " << path.second << " trains.\n";
         std::cout << "The total cost per train is: " << cost << "€.\n\n";
-        std::cout << "The total cost is: " << cost*numberOfTrains << "€.\n\n";
-        std::cout << "\t" << path[0]->getDest()->getStation().getName() << "\n";
+        std::cout << "The total cost is: " << cost*path.second << "€.\n\n";
+        std::cout << "\t" << path.first[0]->getDest()->getStation().getName() << "\n";
         std::cout << "\t^\n";
         std::cout << "\t|\n"; 
         std::cout << "\t|\n"; 
-        for(auto it = path.begin(); it != (--path.end()); it++){
+        for(auto it = path.first.begin(); it != (--path.first.end()); it++){
             std::cout << "\t" << (*it)->getOrigin()->getStation().getName() << "\n";
             std::cout << "\t^\n";
             std::cout << "\t|\n"; 
             std::cout << "\t|\n"; 
         }
-        std::cout << "\t" << path[path.size()-1]->getOrigin()->getStation().getName() << "\n";
+        std::cout << "\t" << path.first[path.first.size()-1]->getOrigin()->getStation().getName() << "\n";
         std::cout << "===================" << std::endl << std::endl;
 
     }
