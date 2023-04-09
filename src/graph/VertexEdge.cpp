@@ -24,6 +24,8 @@ unsigned int Vertex::getInDegree() const {
     return inDegree;
 }
 
+int Vertex::getDistance() const { return distance; }
+
 Edge* Vertex::getPath() const {
     return path;
 }
@@ -50,6 +52,10 @@ void Vertex::setInDegree(unsigned int _inDegree) {
 
 void Vertex::setPath(Edge* _path) {
     this->path = _path;
+}
+
+void Vertex::setDistance(int _distance) {
+    this->distance = _distance;
 }
 
 Edge* Vertex::addEdge(Vertex* dest, int weight, const std::string& service) {
@@ -110,6 +116,10 @@ int Edge::getFlow() const {
     return flow;
 }
 
+int Edge::getCost() const { 
+    return cost; 
+}
+
 std::string Edge::getService() const {
     return service;
 }
@@ -120,6 +130,10 @@ void Edge::setReverse(Edge* _reverse) {
 
 void Edge::setFlow(int _flow) {
     this->flow = _flow;
+}
+
+void Edge::setCost(int _cost) {
+    this->cost = _cost;
 }
 
 bool Edge::operator==(const Edge &edge) const {

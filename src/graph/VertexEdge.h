@@ -13,6 +13,7 @@ private:
     bool visited = false;
     bool processing = false;
     unsigned int inDegree;
+    int distance;
     Edge* path = nullptr;
     std::vector<Edge*> incoming;
 
@@ -23,6 +24,7 @@ public:
     bool isVisited() const;
     bool isProcessing() const;
     unsigned int getInDegree() const;
+    int getDistance() const;
     Edge* getPath() const;
     std::vector<Edge*> getIncoming() const;
     void setStation(const Station& _station);
@@ -30,6 +32,7 @@ public:
     void setProcessing(bool _processing);
     void setInDegree(unsigned int _inDegree);
     void setPath(Edge* _path);
+    void setDistance(int _distance);
 
     /**
      * Adds a new outgoing edge to the vertex/station
@@ -59,6 +62,7 @@ private:
     int weight;
     Edge* reverse = nullptr;
     int flow = 0;
+    int cost = 0;
     std::string service;
 
 public:
@@ -68,9 +72,11 @@ public:
     int getWeight() const;
     Edge* getReverse() const;
     int getFlow() const;
+    int getCost() const;
     std::string getService() const;
     void setReverse(Edge* _reverse);
     void setFlow(int _flow);
+    void setCost(int _cost);
     bool operator==(const Edge& edge) const;
 };
 

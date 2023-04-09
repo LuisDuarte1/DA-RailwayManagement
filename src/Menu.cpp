@@ -43,6 +43,7 @@ int Menu::mainMenu() {
 
     //reportFailureSegmentMenu();
     //maximumTrainsReducedConnectivityMenu();
+    minCostMenu();
 
     Vertex *src = graph->findVertex("Porto Campanhã");
     Vertex *dst = graph->findVertex("Coimbra B");
@@ -267,6 +268,42 @@ void Menu::maximumTrainsReducedConnectivityMenu() {
     std::cout << "Results: \n";
     std::cout << "With reduced connectivity: \t Flow:" << result << "\n";
     std::cout << "Normal Network: \t Flow:" << normalFlow << "\n";
+}
+
+
+
+void Menu::minCostMenu() {
+    std::cout << "======================================================" << std::endl << std::endl;
+    Vertex * src = getValidStation("source");
+    Vertex * dst = getValidStation("dst");
+    //Vertex * src = graph->findVertex("Lisboa Santa Apolónia");
+    //Vertex * dst = graph->findVertex("Coimbra B");
+
+    auto answers = getMinCostPaths(graph, src, dst);
+    std::cout << "The optimal solution contains " << answers.size() << " paths...\n";
+    for(auto path : answers){
+        graph->resetFlow();
+        graph->resetVisited();
+        int cost = calculateCostOfPath(path);
+        reconstructPath(path);
+        int numberOfTrains = graph->findMinResidualAlongPath(src, dst);
+        std::cout << "This path should be done with " << numberOfTrains << " trains.\n";
+        std::cout << "The total cost per train is: " << cost << "€.\n\n";
+        std::cout << "The total cost is: " << cost*numberOfTrains << "€.\n\n";
+        std::cout << "\t" << path[0]->getDest()->getStation().getName() << "\n";
+        std::cout << "\t^\n";
+        std::cout << "\t|\n"; 
+        std::cout << "\t|\n"; 
+        for(auto it = path.begin(); it != (--path.end()); it++){
+            std::cout << "\t" << (*it)->getOrigin()->getStation().getName() << "\n";
+            std::cout << "\t^\n";
+            std::cout << "\t|\n"; 
+            std::cout << "\t|\n"; 
+        }
+        std::cout << "\t" << path[path.size()-1]->getOrigin()->getStation().getName() << "\n";
+        std::cout << "===================" << std::endl << std::endl;
+
+    }
 }
 
 void Menu::reportFailureSegmentMenu() {

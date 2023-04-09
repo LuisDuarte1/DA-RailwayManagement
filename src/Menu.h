@@ -7,6 +7,7 @@
 #include <vector>
 #include "graph/Graph.h"
 #include "LineFailures.h"
+#include "MinCost.h"
 
 class Menu {
 public:
@@ -29,6 +30,7 @@ public:
 
     int dataLoaderMenu();
     void maximumTrainsReducedConnectivityMenu();
+    void minCostMenu();
     void reportFailureSegmentMenu();
     Vertex * getValidStation(std::string displayQuery);
     Edge * getValidSegment(std::string displayQuery);
