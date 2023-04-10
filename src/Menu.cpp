@@ -243,6 +243,7 @@ void Menu::menuController() {
                                 if (stayInMenu) {
                                     break;
                                 } else {
+                                    clearScreen();
                                     control = 0;
                                     temp = 0;
                                     break;
@@ -267,7 +268,7 @@ void Menu::menuController() {
                                 }
 
                                 stayInMenu = getBooleanInputFromUser(
-                                        "\nDo you wish to stay on this menu and alter the segment?", true);
+                                        "\nDo you wish to stay on this menu and change the segment? ", true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
