@@ -172,6 +172,23 @@ void Menu::menuController() {
 
                             case 3: {
                                 clearScreen();
+                                std::cout << "Here we will show you three different criteria that may be subject of analysis to determine the top-k regions that require larger budgets:" << std::endl << std::endl;
+                                std::cout << "\t1. TOP-K REGIONS WITH HIGHEST WEIGHTED AVERAGE: we use linear scaling to assign a "
+                                          << std::endl << "\tweight to the max-flow that each station can receive. Big Stations (stations that" << std::endl
+                                            << "\treceive more flow) receive a higher weight than small stations (stations that receive " << std::endl
+                                            << "\tless flow). This may give an idea of the regions that require more attention, as" << std::endl
+                                            << "\tthey receive many trains." << std::endl << std::endl;
+
+                                std::cout << "\t2. TOP-K REGIONS WITH HIGHEST BOTTLENECK: we determine the max Flow that each station"
+                                          << std::endl << "\tcan receive and then we get the station of the region with highest Max Flow. This" << std::endl
+                                          << "\tcan give us an idea of more urbanized/crowded regions as they are more likely to have" << std::endl
+                                          << "\ta 'big central station'. Also, it may be a good region to build other connections as" << std::endl
+                                          << "\tthese stations also may provide a big flow." << std::endl << std::endl;
+
+                                std::cout << "\t3. TOP-K REGIONS WITH HIGHEST NUMBER OF STATIONS: we count the number of stations in" << std::endl
+                                          << "\teach region and then we get the top-k regions with the highest number of stations." << std::endl
+                                          << "\tThis may give us an idea of the regions that require more attention as they have more" << std::endl
+                                          << "\tstations to maintain." << std::endl << std::endl;
                                 int k = getIntegerInputFromUser("Choose the value for K (number of locations): ");
                                 cout << endl;
                                 bool useDistrict = getBooleanInputFromUser(
