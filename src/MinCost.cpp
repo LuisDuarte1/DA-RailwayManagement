@@ -57,7 +57,7 @@ std::pair<std::vector<Edge*>, bool> getShortestPath(Vertex * dst, Vertex * src){
 int calculateCostOfPath(std::vector<Edge*> path){
     int res = 0;
     for(auto edge : path){
-        res += edge->getCost();
+        res += edge->getCost() * 2;
     }
     return res;
 }
