@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include "LineFailures.h"
-
+#include <cstdlib>
 using namespace std;
 
 Graph *graph;
@@ -24,7 +24,11 @@ int Menu::auxMenu(int maxOption, int minOption) {
 }
 
 void Menu::clearScreen() {
-    std::cout << "\033[2J\033[1;1H";
+    #ifdef _WIN32   // Windows
+        system("cls");
+    #else          // Linux
+        std::cout << "\033[2J\033[1;1H";
+    #endif
 }
 
 int Menu::dataLoaderMenu() {
