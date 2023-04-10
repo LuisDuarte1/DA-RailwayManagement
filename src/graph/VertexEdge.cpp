@@ -107,6 +107,10 @@ void Edge::setCost(int _cost) {
     this->cost = _cost;
 }
 
+void Vertex::setVisited(bool _visited) {
+    this->visited = _visited;
+}
+
 bool Edge::operator==(const Edge &edge) const {
     return origin == edge.origin && dest == edge.dest && weight == edge.weight && service == edge.service;
 }
