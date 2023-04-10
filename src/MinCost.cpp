@@ -1,5 +1,6 @@
 #include "MinCost.h"
 #include <algorithm>
+#include <iostream>
 
 void graphInitCost(Graph* graph){
     for(auto vertex : graph->getVertexSet()){
@@ -57,7 +58,7 @@ std::pair<std::vector<Edge*>, bool> getShortestPath(Vertex * dst, Vertex * src){
 int calculateCostOfPath(std::vector<Edge*> path){
     int res = 0;
     for(auto edge : path){
-        res += edge->getCost() * 2;
+        res += edge->getCost();
     }
     return res;
 }
@@ -65,6 +66,12 @@ int calculateCostOfPath(std::vector<Edge*> path){
 void reconstructPath(std::vector<Edge*> path){
     for(auto edge : path){
         edge->getDest()->setPath(edge);
+    }
+}
+
+void increaseUsedCapacityAlongPath(std::vector<Edge*> path, int usedCapacity){
+    for(auto edge : path){
+        edge->setFlow(edge->getFlow() + usedCapacity);
     }
 }
 
@@ -78,9 +85,11 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::pair<std::vect
     std::vector<int> path_flow;
     //calculate other solutions, again, this could be optimized but it doesnt make a big difference
     for(auto path : other_solutions){
-        path_cost.push_back(calculateCostOfPath(path));
         reconstructPath(path);
-        path_flow.push_back(graph->findMinResidualAlongPath(src, dst));
+        int flow = graph->findMinResidualAlongPath(src, dst);
+        if(flow == 0) continue;
+        path_flow.push_back(flow);
+        path_cost.push_back(calculateCostOfPath(path));
     }
 
     for(auto edge : path){
@@ -94,13 +103,16 @@ void sucessiveShortestPath(int & flow_Remaining, std::vector<std::pair<std::vect
         }
         possible_paths.push_back(path.first);
         path_cost.push_back(calculateCostOfPath(path.first));
-        path_flow.push_back(graph->findMinResidualAlongPath(src, dst));
+        int flow = graph->findMinResidualAlongPath(src, dst);
+        if(flow == 0) continue;
+        path_flow.push_back(flow);
         edge->setCost(prev_cost);
     }
 
     int minIndex = std::distance(path_cost.begin(), std::min_element(path_cost.begin(), path_cost.end()));
     flow_Remaining -= path_flow[minIndex];
     auto minPath = possible_paths[minIndex];
+    increaseUsedCapacityAlongPath(minPath, path_flow[minIndex]);
     res.push_back({minPath, path_flow[minIndex]});
     if(flow_Remaining <= 0){
         return;
@@ -124,7 +136,7 @@ std::vector<std::pair<std::vector<Edge*>, int>> getMinCostPaths(Graph* graph, Ve
     findShortestPath(graph, src, dst);
     auto path = getShortestPath(dst, src);
     int flow = graph->findMinResidualAlongPath(src, dst);
-    graph->augmentFlowAlongPath(src, dst, flow);
+    increaseUsedCapacityAlongPath(path.first, flow);
     flow_remaining -= flow;
     res.push_back({path.first, flow});
     if(flow_remaining <= 0){
