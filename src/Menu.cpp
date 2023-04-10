@@ -87,9 +87,11 @@ int Menu::bsmMenu() {
 }
 
 int Menu::ocoMenu() {
+    clearScreen();
     cout << endl << "OPERATION COST OPTIMIZATION MENU\n";
-    cout << endl << "1.Choose station \n";
-    cout << "0.Return to main menu\n";
+    cout << endl << "\t1. Choose source and destination stations \n";
+    cout << "\t0.Return to main menu\n";
+    cout << endl << "Choose an option: ";
     return auxMenu(1, 0);
 }
 
@@ -127,7 +129,7 @@ void Menu::menuController() {
                                 cout << "The max amount of trains travelling simultaneously between "
                                      << src->getStation().getName() << " and " << dst->getStation().getName() << " is "
                                      << result << "." << endl << endl;
-                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu (y/n) ?", true);
+                                stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu (y/n)? ", true);
                                 if (stayInMenu) {
                                     temp = 1;
                                     control = 0;
@@ -224,6 +226,19 @@ void Menu::menuController() {
                     int control = ocoMenu();
                     do {
                         switch (control) {
+                            case 1 : {
+                                clearScreen();
+                                Vertex *src = getValidStationv2("origin/source");
+                                Vertex *dst = getValidStationv2("sink/destination");
+                                if (stayInMenu) {
+                                    break;
+                                } else {
+                                    clearScreen();
+                                    control = 0;
+                                    temp = 0;
+                                    break;
+                                }
+                            }
                             case 0 : {
                                 temp = 0;
                             }
@@ -363,6 +378,7 @@ void Menu::menuController() {
             }
 
         } while (temp != 0);
+        clearScreen();
 
     } while (op != 0);
     cout << "\n";
@@ -379,7 +395,7 @@ void Menu::maximumTrainsReducedConnectivityMenu() {
         Edge *edge = getValidSegment("BROKEN SEGMENT (the segment that will be removed from the network)");
         segmentsToExclude.push_back(edge);
         clearScreen();
-        if (!getBooleanInputFromUser("Do you wish to insert more segments (y/N): ", false)) break;
+        if (!getBooleanInputFromUser("Do you wish to insert more segments (y/n): ", false)) break;
     }
     int normalFlow = graph->edmondsKarp(src, dst);
     int result = maximumTrainsReducedConnectivity(graph, segmentsToExclude, src, dst);
