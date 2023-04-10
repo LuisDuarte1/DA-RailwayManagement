@@ -12,21 +12,21 @@ int Menu::auxMenu(int maxOption, int minOption) {
     int op;
     while (true) {
         std::cin >> op;
-        if (std::cin.fail() || (op > maxOption || op < minOption)) {  // input is not an integer
+        if (std::cin.fail() || (op > maxOption || op < minOption)) {
             std::cout << "Please enter a valid integer: ";
-            std::cin.clear();  // clear the error flag
-            std::cin.ignore(10000, '\n');  // ignore the invalid input
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
         } else {
-            break;  // input is valid, break the loop
+            break;
         }
     }
     return op;
 }
 
 void Menu::clearScreen() {
-#ifdef _WIN32   // Windows
+#ifdef _WIN32
     system("cls");
-#else          // Linux
+#else
     std::cout << "\033[2J\033[1;1H";
 #endif
 }
@@ -127,8 +127,8 @@ void Menu::menuController() {
                         switch (control) {
                             case 1: {
                                 clearScreen();
-                                Vertex *src = getValidStationv2("origin/source");
-                                Vertex *dst = getValidStationv2("sink/destination");
+                                Vertex *src = getValidStation("origin/source");
+                                Vertex *dst = getValidStation("sink/destination");
                                 int result = graph->edmondsKarp(src, dst);
                                 std::cout << "The max amount of trains travelling simultaneously between "
                                           << src->getStation().getName() << " and " << dst->getStation().getName()
@@ -232,7 +232,7 @@ void Menu::menuController() {
                             case 4: {
                                 clearScreen();
                                 std::cout << std::endl;
-                                Vertex *st = getValidStationv2("desired");
+                                Vertex *st = getValidStation("desired");
                                 int result = graph->edmondsKarpSinkOnly(st);
                                 std::cout << "The maximum amount of trains that can arrive at "
                                           << st->getStation().getName()
@@ -267,8 +267,8 @@ void Menu::menuController() {
                         switch (control) {
                             case 1 : {
                                 clearScreen();
-                                Vertex *src = getValidStationv2("origin/source");
-                                Vertex *dst = getValidStationv2("sink/destination");
+                                Vertex *src = getValidStation("origin/source");
+                                Vertex *dst = getValidStation("sink/destination");
                                 std::vector<std::pair<std::vector<Edge *>, int>> answers = getMinCostPaths(graph, src,
                                                                                                            dst);
                                 int totalCost = 0;
@@ -510,22 +510,6 @@ Vertex *Menu::getValidStation(std::string displayQuery) {
     Vertex *v;
     do {
         std::cout << "Please select a " << displayQuery << " station: ";
-        std::string station;
-        do {
-            std::getline(std::cin, station);
-        } while (station.empty());
-        v = graph->findVertex(station);
-        std::cout << std::endl;
-        if (v == nullptr) std::cout << "Invalid station name... please try again..\n\n";
-    } while (v == nullptr);
-    return v;
-}
-
-Vertex *Menu::getValidStationv2(std::string displayQuery) {
-    Vertex *v;
-    do {
-        std::cout << "Please select the " << displayQuery << " station: ";
-        std::cin.clear(); // clear any error flags on the cin stream
         std::string station;
         do {
             std::getline(std::cin, station);

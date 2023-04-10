@@ -80,11 +80,10 @@ void sucessiveShortestPath(int &flow_Remaining, std::vector<std::pair<std::vecto
                            std::vector<Edge *> path,
                            Graph *graph, Vertex *src, Vertex *dst, std::vector<std::vector<Edge *>> other_solutions) {
 
-    //if the required flow is superior to 1 we need to find the second shortest path and so on
     std::vector<std::vector<Edge *>> possible_paths;
     std::vector<int> path_cost;
     std::vector<int> path_flow;
-    //calculate other solutions, again, this could be optimized but it doesnt make a big difference
+
     for (auto path: other_solutions) {
         reconstructPath(path);
         int flow = graph->findMinResidualAlongPath(src, dst);

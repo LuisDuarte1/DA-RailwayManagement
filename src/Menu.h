@@ -75,8 +75,6 @@ public:
 
     Vertex *getValidStation(std::string displayQuery);
 
-    Vertex *getValidStationv2(std::string displayQuery);
-
     Edge *getValidSegment(std::string displayQuery);
 
     bool getBooleanInputFromUser(std::string displayString, bool defaultEnter);
