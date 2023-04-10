@@ -75,7 +75,6 @@ void increaseUsedCapacityAlongPath(std::vector<Edge *> path, int usedCapacity) {
     }
 }
 
-
 void sucessiveShortestPath(int &flow_Remaining, std::vector<std::pair<std::vector<Edge *>, int>> &res,
                            std::vector<Edge *> path,
                            Graph *graph, Vertex *src, Vertex *dst, std::vector<std::vector<Edge *>> other_solutions) {
@@ -122,7 +121,6 @@ void sucessiveShortestPath(int &flow_Remaining, std::vector<std::pair<std::vecto
 
 
 }
-
 
 std::vector<std::pair<std::vector<Edge *>, int>> getMinCostPaths(Graph *graph, Vertex *src, Vertex *dst) {
     graphInitCost(graph);
