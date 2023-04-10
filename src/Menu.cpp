@@ -70,7 +70,7 @@ int Menu::AboutUsMenu() {
               << " 202108734" << std::endl;
     std::cout << std::left << std::setw(30) << "Luís Jesus" << std::setfill(' ') << std::right << std::setw(18)
               << " 202108683" << std::endl;
-    std::cout << std::endl << "0.Return to main menu \n" << std::endl;
+    std::cout << std::endl << "0. Return to main menu \n" << std::endl;
     std::cout << "Choose an option: ";
     return auxMenu(0, 0);
 }
@@ -93,7 +93,7 @@ int Menu::ocoMenu() {
     clearScreen();
     std::cout << std::endl << "OPERATION COST OPTIMIZATION MENU\n";
     std::cout << std::endl << "\t1. Choose source and destination stations \n";
-    std::cout << "\t0.Return to main menu\n";
+    std::cout << "\t0. Return to main menu\n";
     std::cout << std::endl << "Choose an option: ";
     return auxMenu(1, 0);
 }
