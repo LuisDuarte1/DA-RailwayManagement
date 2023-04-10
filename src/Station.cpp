@@ -13,11 +13,11 @@ Station::Station() {
 }
 
 Station::Station(
-        const std::string& name,
-        const std::string& district,
-        const std::string& municipality,
-        const std::string& township,
-        const std::string& line
+        const std::string &name,
+        const std::string &district,
+        const std::string &municipality,
+        const std::string &township,
+        const std::string &line
 ) {
     this->name = name;
     this->district = district;

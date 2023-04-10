@@ -74,11 +74,11 @@ public:
 
     void reportFailureSegmentMenu();
 
-    Vertex * getValidStation(std::string displayQuery);
+    Vertex *getValidStation(std::string displayQuery);
 
-    Vertex* getValidStationv2(std::string displayQuery);
+    Vertex *getValidStationv2(std::string displayQuery);
 
-    Edge * getValidSegment(std::string displayQuery);
+    Edge *getValidSegment(std::string displayQuery);
 
     bool getBooleanInputFromUser(std::string displayString, bool defaultEnter);
 
@@ -86,6 +86,5 @@ public:
 
     void displayTopK(int k, bool useDistricts);
 };
-
 
 #endif //UNTITLED_MENU_H
