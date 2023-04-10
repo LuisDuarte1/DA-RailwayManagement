@@ -1,7 +1,3 @@
-//
-// Created by luis on 18-03-2023.
-//
-
 #include "Station.h"
 
 Station::Station() {
@@ -36,14 +32,6 @@ std::string Station::getDistrict() const {
 
 std::string Station::getMunicipality() const {
     return this->municipality;
-}
-
-std::string Station::getTownship() const {
-    return this->township;
-}
-
-std::string Station::getLine() const {
-    return this->line;
 }
 
 bool Station::operator==(const Station &station) const {

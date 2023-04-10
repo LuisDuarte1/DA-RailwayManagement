@@ -26,23 +26,13 @@ public:
 
     bool isVisited() const;
 
-    bool isProcessing() const;
-
-    unsigned int getInDegree() const;
-
     int getDistance() const;
 
     Edge *getPath() const;
 
     std::vector<Edge *> getIncoming() const;
 
-    void setStation(const Station &_station);
-
     void setVisited(bool _visited);
-
-    void setProcessing(bool _processing);
-
-    void setInDegree(unsigned int _inDegree);
 
     void setPath(Edge *_path);
 
@@ -88,8 +78,6 @@ public:
     Vertex *getDest() const;
 
     int getWeight() const;
-
-    Edge *getReverse() const;
 
     int getFlow() const;
 

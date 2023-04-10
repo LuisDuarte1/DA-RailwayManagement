@@ -16,14 +16,6 @@ bool Vertex::isVisited() const {
     return visited;
 }
 
-bool Vertex::isProcessing() const {
-    return processing;
-}
-
-unsigned int Vertex::getInDegree() const {
-    return inDegree;
-}
-
 int Vertex::getDistance() const { return distance; }
 
 Edge *Vertex::getPath() const {
@@ -32,22 +24,6 @@ Edge *Vertex::getPath() const {
 
 std::vector<Edge *> Vertex::getIncoming() const {
     return incoming;
-}
-
-void Vertex::setStation(const Station &_station) {
-    this->station = _station;
-}
-
-void Vertex::setVisited(bool _visited) {
-    this->visited = _visited;
-}
-
-void Vertex::setProcessing(bool _processing) {
-    this->processing = _processing;
-}
-
-void Vertex::setInDegree(unsigned int _inDegree) {
-    this->inDegree = _inDegree;
 }
 
 void Vertex::setPath(Edge *_path) {
@@ -105,10 +81,6 @@ Vertex *Edge::getDest() const {
 
 int Edge::getWeight() const {
     return weight;
-}
-
-Edge *Edge::getReverse() const {
-    return reverse;
 }
 
 int Edge::getFlow() const {

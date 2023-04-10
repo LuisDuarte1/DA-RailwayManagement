@@ -27,10 +27,6 @@ public:
 
     std::string getMunicipality() const;
 
-    std::string getTownship() const;
-
-    std::string getLine() const;
-
     bool operator==(const Station &station) const;
 };
 
