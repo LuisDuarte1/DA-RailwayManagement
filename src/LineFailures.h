@@ -22,7 +22,7 @@ int maximumTrainsReducedConnectivity(Graph *graph, std::vector<Edge *> segmentsT
  * @param segmentToRemove The segment to remove
  * @return A map with the maximum number of trains that every station can receive after removing segments of the network
  */
-std::unordered_map<Vertex *, int> capacityOnFailureAllStations(Graph *graph, Edge * segmentToRemove);
+std::unordered_map<Vertex *, int> capacityOnFailureAllStations(Graph *graph, Edge *segmentToRemove);
 
 /**
  * Computes the most affected stations on segment failure, i.e. the stations that lose the most trains after removing a segment
@@ -31,6 +31,7 @@ std::unordered_map<Vertex *, int> capacityOnFailureAllStations(Graph *graph, Edg
  * @param segmentToRemove The segment to remove
  * @return A vector of pairs of pairs of pointers to vertices and pairs of integers, where the first pair is the vertex and the second pair is the number of trains that the station can receive before and after removing the segment
  */
-std::vector<std::pair<Vertex *, std::pair<int,int>>> mostAffectedStationsOnSegmentFailure(Graph * graph, Edge * segmentToRemove);
+std::vector<std::pair<Vertex *, std::pair<int, int>>>
+mostAffectedStationsOnSegmentFailure(Graph *graph, Edge *segmentToRemove);
 
 #endif

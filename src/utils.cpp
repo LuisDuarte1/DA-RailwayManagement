@@ -1,7 +1,7 @@
 #include <vector>
 #include <algorithm>
 
-float computeWeights(const std::vector<int>& values, std::vector<float> &weights) {
+float computeWeights(const std::vector<int> &values, std::vector<float> &weights) {
     int maxVal = *std::max_element(values.begin(), values.end());
     int minVal = *std::min_element(values.begin(), values.end());
 

@@ -4,8 +4,8 @@
 #include "Graph.h"
 #include "utils.h"
 
-Vertex* Graph::findVertex(const std::string &station) const {
-    for (Vertex* v : vertexSet) {
+Vertex *Graph::findVertex(const std::string &station) const {
+    for (Vertex *v: vertexSet) {
         if (v->getStation().getName() == station) {
             return v;
         }
@@ -21,8 +21,8 @@ bool Graph::addVertex(const Station &station) {
 }
 
 bool Graph::addEdge(const std::string &origin, const std::string &dest, int weight, const std::string &service) {
-    Vertex* v1 = findVertex(origin);
-    Vertex* v2 = findVertex(dest);
+    Vertex *v1 = findVertex(origin);
+    Vertex *v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
     v1->addEdge(v2, weight, service);
@@ -31,13 +31,13 @@ bool Graph::addEdge(const std::string &origin, const std::string &dest, int weig
 
 bool Graph::addBidirectionalEdge(const std::string &origin, const std::string &dest, int weight,
                                  const std::string &service) {
-    Vertex* v1 = findVertex(origin);
-    Vertex* v2 = findVertex(dest);
+    Vertex *v1 = findVertex(origin);
+    Vertex *v2 = findVertex(dest);
     if (v1 == nullptr || v2 == nullptr)
         return false;
 
-    Edge* e1 = v1->addEdge(v2, weight, service);
-    Edge* e2 = v2->addEdge(v1, weight, service);
+    Edge *e1 = v1->addEdge(v2, weight, service);
+    Edge *e2 = v2->addEdge(v1, weight, service);
     e1->setReverse(e2);
     e2->setReverse(e1);
     return true;
@@ -47,11 +47,11 @@ int Graph::getNumVertex() const {
     return vertexSet.size();
 }
 
-std::vector<Vertex*> Graph::getVertexSet() const {
+std::vector<Vertex *> Graph::getVertexSet() const {
     return vertexSet;
 }
 
-void Graph::DFS(Vertex* source) {
+void Graph::DFS(Vertex *source) {
     source->setVisited(true);
     for (auto e: source->getEdges()) {
         if (!e->getDest()->isVisited()) {
@@ -67,8 +67,8 @@ void Graph::resetVisited() {
 }
 
 void Graph::resetFlow() {
-    for (auto v : vertexSet) {
-        for (auto e : v->getEdges()) {
+    for (auto v: vertexSet) {
+        for (auto e: v->getEdges()) {
             e->setFlow(0);
         }
     }
@@ -84,13 +84,12 @@ void Graph::testAndVisit(std::queue<Vertex *> &q, Edge *e, Vertex *w, float resi
 
 int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
     int minResidual = INT_MAX;
-    for (Vertex* v = dest; v != source;) {
-        Edge* e = v->getPath();
+    for (Vertex *v = dest; v != source;) {
+        Edge *e = v->getPath();
         if (e->getDest() == v) {
             minResidual = std::min(minResidual, e->getWeight() - e->getFlow());
             v = e->getOrigin();
-        }
-        else {
+        } else {
             minResidual = std::min(minResidual, e->getFlow());
             v = e->getDest();
         }
@@ -99,19 +98,19 @@ int Graph::findMinResidualAlongPath(Vertex *source, Vertex *dest) {
 }
 
 bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
-    for (Vertex* v : vertexSet) {
+    for (Vertex *v: vertexSet) {
         v->setVisited(false);
     }
     source->setVisited(true);
-    std::queue<Vertex*> q;
+    std::queue<Vertex *> q;
     q.push(source);
     while (!q.empty() && !dest->isVisited()) {
-        Vertex* v = q.front();
+        Vertex *v = q.front();
         q.pop();
-        for (Edge* e : v->getEdges()) {
+        for (Edge *e: v->getEdges()) {
             testAndVisit(q, e, e->getDest(), e->getWeight() - e->getFlow());
         }
-        for (Edge* e : v->getIncoming()) {
+        for (Edge *e: v->getIncoming()) {
             testAndVisit(q, e, e->getOrigin(), e->getFlow());
         }
     }
@@ -119,13 +118,12 @@ bool Graph::findAugmentingPath(Vertex *source, Vertex *dest) {
 }
 
 void Graph::augmentFlowAlongPath(Vertex *source, Vertex *dest, int minResidual) {
-    for (Vertex* v = dest; v != source;) {
-        Edge* e = v->getPath();
+    for (Vertex *v = dest; v != source;) {
+        Edge *e = v->getPath();
         if (e->getDest() == v) {
             e->setFlow(e->getFlow() + minResidual);
             v = e->getOrigin();
-        }
-        else {
+        } else {
             e->setFlow(e->getFlow() - minResidual);
             v = e->getDest();
         }
@@ -152,7 +150,7 @@ int Graph::edmondsKarp(Vertex *source, Vertex *dest) {
     return max_flow;
 }
 
-int Graph::edmondsKarpSinkOnly (Vertex* dest) {
+int Graph::edmondsKarpSinkOnly(Vertex *dest) {
     Station superSourceStation("superSource", "", "", "", "");
     addVertex(superSourceStation);
 
@@ -162,11 +160,11 @@ int Graph::edmondsKarpSinkOnly (Vertex* dest) {
         if (v->getEdges().size() == 1 && v != dest)
             addEdge(superSourceStation.getName(), v->getStation().getName(), INT_MAX, "");
     }
-    Vertex* superSource = findVertex(superSourceStation.getName());
+    Vertex *superSource = findVertex(superSourceStation.getName());
     int maxFlow = edmondsKarp(superSource, dest);
 
-    for (Edge* e: superSource->getEdges()) {
-        Vertex* v = e->getDest();
+    for (Edge *e: superSource->getEdges()) {
+        Vertex *v = e->getDest();
         superSource->removeEdge(v->getStation());
     }
     vertexSet.pop_back();
@@ -201,23 +199,23 @@ std::pair<std::vector<std::pair<Vertex *, Vertex *>>, int> Graph::moreDemandingP
     return std::make_pair(maxStations, max);
 }
 
-void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeightedAverage,
-              std::vector<std::pair<std::string, int>> &highestBottleneck,
-              std::vector<std::pair<std::string, int>> &moreStations,
-              int k, bool useDistricts) {
+void Graph::findTopK(std::vector<std::pair<std::string, float>> &maxFlowWeightedAverage,
+                     std::vector<std::pair<std::string, int>> &highestBottleneck,
+                     std::vector<std::pair<std::string, int>> &moreStations,
+                     int k, bool useDistricts) {
 
     std::unordered_map<std::string, int> stationsPerArea;
     std::unordered_map<std::string, int> bottlenecks;
     std::unordered_map<std::string, std::vector<int>> flowsPerStation;
 
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         std::string area = useDistricts ? v->getStation().getDistrict() : v->getStation().getMunicipality();
         stationsPerArea[area] = 0;
         bottlenecks[area] = 0;
         flowsPerStation[area] = std::vector<int>();
     }
 
-    for (auto v : vertexSet) {
+    for (auto v: vertexSet) {
         int maxFlow = edmondsKarpSinkOnly(v);
         std::string area = useDistricts ? v->getStation().getDistrict() : v->getStation().getMunicipality();
         if (maxFlow > bottlenecks[area]) bottlenecks[area] = maxFlow;
@@ -229,14 +227,16 @@ void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeighted
         return a.second > b.second;
     };
 
-    auto compared= [](std::pair<std::string, float> &a, std::pair<std::string, float> &b) {
+    auto compared = [](std::pair<std::string, float> &a, std::pair<std::string, float> &b) {
         return a.second > b.second;
     };
 
-    std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>, decltype(compared)> pqd(compared);
-    std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(compare);
+    std::priority_queue<std::pair<std::string, float>, std::vector<std::pair<std::string, float>>, decltype(compared)> pqd(
+            compared);
+    std::priority_queue<std::pair<std::string, int>, std::vector<std::pair<std::string, int>>, decltype(compare)> pq(
+            compare);
 
-    for (const std::pair<std::string, std::vector<int>> area : flowsPerStation) {
+    for (const std::pair<std::string, std::vector<int>> area: flowsPerStation) {
         std::vector<float> weights(area.second.size());
         float weightSum = computeWeights(area.second, weights);
         float weightedAverage = 0;
@@ -254,7 +254,7 @@ void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeighted
         pqd.pop();
     }
 
-    for (const std::pair<std::string, int> area : bottlenecks) {
+    for (const std::pair<std::string, int> area: bottlenecks) {
         pq.push(area);
         if (pq.size() > k) pq.pop();
     }
@@ -264,7 +264,7 @@ void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeighted
         pq.pop();
     }
 
-    for (const std::pair<std::string, int> area : stationsPerArea) {
+    for (const std::pair<std::string, int> area: stationsPerArea) {
         pq.push(area);
         if (pq.size() > k) pq.pop();
     }
@@ -274,13 +274,16 @@ void Graph::findTopK(std::vector<std::pair<std::string, float>>& maxFlowWeighted
         pq.pop();
     }
 
-    std::sort(maxFlowWeightedAverage.begin(), maxFlowWeightedAverage.end(), [](const std::pair<std::string, float> &a, const std::pair<std::string, float> &b) {
-        return a.second > b.second;
-    });
-    std::sort(highestBottleneck.begin(), highestBottleneck.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
-        return a.second > b.second;
-    });
-    std::sort(moreStations.begin(), moreStations.end(), [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
-        return a.second > b.second;
-    });
+    std::sort(maxFlowWeightedAverage.begin(), maxFlowWeightedAverage.end(),
+              [](const std::pair<std::string, float> &a, const std::pair<std::string, float> &b) {
+                  return a.second > b.second;
+              });
+    std::sort(highestBottleneck.begin(), highestBottleneck.end(),
+              [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+                  return a.second > b.second;
+              });
+    std::sort(moreStations.begin(), moreStations.end(),
+              [](const std::pair<std::string, int> &a, const std::pair<std::string, int> &b) {
+                  return a.second > b.second;
+              });
 }

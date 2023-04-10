@@ -1,7 +1,6 @@
-#include "DatasetLoader.h"
 #include "Menu.h"
 
-int main(){
+int main() {
     Menu menu;
     menu.menuController();
     return 0;
