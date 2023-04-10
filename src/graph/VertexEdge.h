@@ -9,7 +9,7 @@ class Edge;
 class Vertex {
 private:
     Station station;
-    std::vector<Edge*> edges;
+    std::vector<Edge *> edges;
     bool visited = false;
     bool processing = false;
     unsigned int inDegree;
@@ -18,18 +18,25 @@ private:
     std::vector<Edge*> incoming;
 
 public:
-    explicit Vertex(const Station& station);
-    const Station& getStation() const;
-    std::vector<Edge*> getEdges() const;
+    explicit Vertex(const Station &station);
+
+    const Station &getStation() const;
+
+    std::vector<Edge *> getEdges() const;
+
     bool isVisited() const;
+
     bool isProcessing() const;
+
     unsigned int getInDegree() const;
     int getDistance() const;
     Edge* getPath() const;
     std::vector<Edge*> getIncoming() const;
     void setStation(const Station& _station);
     void setVisited(bool _visited);
+
     void setProcessing(bool _processing);
+
     void setInDegree(unsigned int _inDegree);
     void setPath(Edge* _path);
     void setDistance(int _distance);
@@ -42,7 +49,7 @@ public:
      * @param service Service of the edge
      * @return Pointer to the new edge
      */
-    Edge* addEdge(Vertex* dest, int weight, const std::string& service);
+    Edge *addEdge(Vertex *dest, int weight, const std::string &service);
 
     /**
      * Removes an edge with a given destination from the vertex/station
@@ -50,31 +57,39 @@ public:
      * @param des Station to remove the edge to
      * @return True if the edge was removed, false otherwise
      */
-    bool removeEdge(const Station& dest);
-    bool operator==(const Vertex& vertex) const;
+    bool removeEdge(const Station &dest);
+
+    bool operator==(const Vertex &vertex) const;
 
 };
 
 class Edge {
 private:
-    Vertex* origin;
-    Vertex* dest;
+    Vertex *origin;
+    Vertex *dest;
     int weight;
-    Edge* reverse = nullptr;
+    Edge *reverse = nullptr;
     int flow = 0;
     int cost = 0;
     std::string service;
 
 public:
-    Edge(Vertex* origin, Vertex* dest, int weight, const std::string& service);
-    Vertex* getOrigin() const;
-    Vertex* getDest() const;
+    Edge(Vertex *origin, Vertex *dest, int weight, const std::string &service);
+
+    Vertex *getOrigin() const;
+
+    Vertex *getDest() const;
+
     int getWeight() const;
-    Edge* getReverse() const;
+
+    Edge *getReverse() const;
+
     int getFlow() const;
     int getCost() const;
     std::string getService() const;
-    void setReverse(Edge* _reverse);
+
+    void setReverse(Edge *_reverse);
+
     void setFlow(int _flow);
     void setCost(int _cost);
     bool operator==(const Edge& edge) const;

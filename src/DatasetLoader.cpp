@@ -3,26 +3,26 @@
 #include <fstream>
 #include <sstream>
 
-Graph* loadDataset(std::string networkPath, std::string stationsPath) {
+Graph *loadDataset(std::string networkPath, std::string stationsPath) {
     std::ifstream networkFile(networkPath);
     std::ifstream stationFile(stationsPath);
 
-    if(!networkFile.good()) {
+    if (!networkFile.good()) {
         std::cout << "Couldn't load network file " << networkPath << "\n";
         return nullptr;
     }
 
-    if(!stationFile.good()) {
+    if (!stationFile.good()) {
         std::cout << "Couldn't load stations file " << stationsPath << "\n";
         return nullptr;
     }
 
-    Graph* graph = new Graph();
-    
+    Graph *graph = new Graph();
+
     std::string stationLine;
     std::getline(stationFile, stationLine);
 
-    while(std::getline(stationFile,stationLine).good()){
+    while (std::getline(stationFile, stationLine).good()) {
         std::istringstream stationLineStream(stationLine);
         std::string name;
         std::getline(stationLineStream, name, ',');
@@ -35,8 +35,8 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
         std::string line;
         std::getline(stationLineStream, line, '\r');
         Station station = Station(name, district, municipality, township, line);
-        
-        if(graph->findVertex(name) != nullptr) {
+
+        if (graph->findVertex(name) != nullptr) {
             std::cout << name << " already exists in graph... skipping it.\n";
             continue;
         }
@@ -46,7 +46,7 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
     std::string networkLine;
     std::getline(networkFile, networkLine);
 
-    while(std::getline(networkFile,networkLine).good()){
+    while (std::getline(networkFile, networkLine).good()) {
         std::istringstream networkLineStream(networkLine);
         std::string stationA;
         std::getline(networkLineStream, stationA, ',');
@@ -57,21 +57,21 @@ Graph* loadDataset(std::string networkPath, std::string stationsPath) {
         int capacity = std::atoi(capacityStr.c_str());
         std::string service;
         std::getline(networkLineStream, service, '\r');
-        Vertex * src = graph->findVertex(stationA);
-        Vertex * dst = graph->findVertex(stationB);
+        Vertex *src = graph->findVertex(stationA);
+        Vertex *dst = graph->findVertex(stationB);
 
-        if(src == nullptr){
+        if (src == nullptr) {
             std::cout << stationA << " doesnt exist in graph... skipping it.\n";
             continue;
         }
 
-        if(dst == nullptr){
+        if (dst == nullptr) {
             std::cout << stationA << " doesnt exist in graph... skipping it.\n";
             continue;
         }
 
         bool edgeExists = false;
-        for (Edge* e : src->getEdges()) {
+        for (Edge *e: src->getEdges()) {
             if (e->getDest() == dst) {
                 std::cout << "Edge " << stationA << " -> " << stationB << " already exists in graph... skipping it.\n";
                 edgeExists = true;

@@ -1,5 +1,6 @@
 #ifndef DA_RAILWAYMANAGEMENT_UTILS_H
 #define DA_RAILWAYMANAGEMENT_UTILS_H
+
 #include <vector>
 
 /**
@@ -9,6 +10,6 @@
  * @param weights Vector of weights
  * @return The sum of the weights to be used to compute the average
  */
-float computeWeights(const std::vector<int>& values, std::vector<float> &weights);
+float computeWeights(const std::vector<int> &values, std::vector<float> &weights);
 
 #endif //DA_RAILWAYMANAGEMENT_UTILS_H

@@ -13,6 +13,6 @@
  * @param stationsPath desired station csv file
  * @return Graph* if successful otherwise returns nullptr.
  */
-Graph* loadDataset(std::string networkPath, std::string stationsPath);
+Graph *loadDataset(std::string networkPath, std::string stationsPath);
 
 #endif
