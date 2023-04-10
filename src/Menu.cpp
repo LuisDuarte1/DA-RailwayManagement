@@ -186,16 +186,18 @@ void Menu::menuController() {
                             }
 
                             case 4: {
+                                clearScreen();
                                 cout << endl;
                                 Vertex *st = getValidStationv2("desired");
                                 int result = graph->edmondsKarpSinkOnly(st);
                                 cout << "The maximum amount of trains that can arrive at " << st->getStation().getName()
                                      << " is " << result << endl;
                                 stayInMenu = getBooleanInputFromUser(
-                                        "Do you wish to stay on this menu and alter the station ?", true);
+                                        "\nDo you wish to stay on this menu and change the station? ", true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
+                                    clearScreen();
                                     control = 0;
                                     temp = 0;
                                     break;
