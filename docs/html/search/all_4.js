@@ -1,6 +1,7 @@
 var searchData=
 [
-  ['getnumvertex_12',['getNumVertex',['../classGraph.html#abb5e0517e2979c54eebdafc2a9875e8f',1,'Graph']]],
-  ['getvertexset_13',['getVertexSet',['../classGraph.html#a619ac583094079134074658e29463c0e',1,'Graph']]],
-  ['graph_14',['Graph',['../classGraph.html',1,'']]]
+  ['edge_22',['Edge',['../classEdge.html',1,'Edge'],['../classEdge.html#acb63112cb49a14c68ea110714a5cd391',1,'Edge::Edge()']]],
+  ['edges_23',['edges',['../classVertex.html#abb4eed18d1dd0baf7750c9ad969e289d',1,'Vertex']]],
+  ['edmondskarp_24',['edmondsKarp',['../classGraph.html#a7a2365ace124035cf353e424f17de9c9',1,'Graph']]],
+  ['edmondskarpsinkonly_25',['edmondsKarpSinkOnly',['../classGraph.html#a4dfd9600a3216f5baf52e3395d826dc6',1,'Graph']]]
 ];

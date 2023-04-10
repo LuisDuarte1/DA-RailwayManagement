@@ -14,8 +14,8 @@ private:
     bool processing = false;
     unsigned int inDegree;
     int distance;
-    Edge* path = nullptr;
-    std::vector<Edge*> incoming;
+    Edge *path = nullptr;
+    std::vector<Edge *> incoming;
 
 public:
     explicit Vertex(const Station &station);
@@ -29,16 +29,23 @@ public:
     bool isProcessing() const;
 
     unsigned int getInDegree() const;
+
     int getDistance() const;
-    Edge* getPath() const;
-    std::vector<Edge*> getIncoming() const;
-    void setStation(const Station& _station);
+
+    Edge *getPath() const;
+
+    std::vector<Edge *> getIncoming() const;
+
+    void setStation(const Station &_station);
+
     void setVisited(bool _visited);
 
     void setProcessing(bool _processing);
 
     void setInDegree(unsigned int _inDegree);
-    void setPath(Edge* _path);
+
+    void setPath(Edge *_path);
+
     void setDistance(int _distance);
 
     /**
@@ -85,14 +92,18 @@ public:
     Edge *getReverse() const;
 
     int getFlow() const;
+
     int getCost() const;
+
     std::string getService() const;
 
     void setReverse(Edge *_reverse);
 
     void setFlow(int _flow);
+
     void setCost(int _cost);
-    bool operator==(const Edge& edge) const;
+
+    bool operator==(const Edge &edge) const;
 };
 
 #endif //DA_RAILWAYMANAGEMENT_VERTEXEDGE_H

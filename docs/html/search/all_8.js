@@ -1,4 +1,7 @@
 var searchData=
 [
-  ['testandvisit_20',['testAndVisit',['../classGraph.html#a8e519d45a501fa1a2933e1e53804e4be',1,'Graph']]]
+  ['line_69',['line',['../classStation.html#abd2ae3f8f28f8b10513929ed0cc4b211',1,'Station']]],
+  ['linefailures_2ecpp_70',['LineFailures.cpp',['../LineFailures_8cpp.html',1,'']]],
+  ['linefailures_2eh_71',['LineFailures.h',['../LineFailures_8h.html',1,'']]],
+  ['loaddataset_72',['loadDataset',['../DatasetLoader_8cpp.html#ac831183692094bfeee61cf05cc7fdf1b',1,'loadDataset(std::string networkPath, std::string stationsPath):&#160;DatasetLoader.cpp'],['../DatasetLoader_8h.html#ac831183692094bfeee61cf05cc7fdf1b',1,'loadDataset(std::string networkPath, std::string stationsPath):&#160;DatasetLoader.cpp']]]
 ];

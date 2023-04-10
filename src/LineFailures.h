@@ -5,7 +5,7 @@
 #include <unordered_map>
 
 /**
- * Computes the maximum number of trains that can be transported from src to dst after removing segments of the network
+ * @brief Computes the maximum number of trains that can be transported from src to dst after removing segments of the network
  * Time Complexity: O(n) being n the number of segments to remove
  * @param graph The graph representing the network
  * @param segmentsToRemove The segments to remove
@@ -16,7 +16,7 @@
 int maximumTrainsReducedConnectivity(Graph *graph, std::vector<Edge *> segmentsToRemove, Vertex *src, Vertex *dst);
 
 /**
- * Computes the maximum number of trains that every station can receive after removing segments of the network using Edmonds-Karp algorithm
+ * @brief Computes the maximum number of trains that every station can receive after removing segments of the network using Edmonds-Karp algorithm
  * Time Complexity: O(|V|²|E|²) being |V| the number of vertices and |E| the number of edges
  * @param graph The graph representing the network
  * @param segmentToRemove The segment to remove
@@ -25,7 +25,7 @@ int maximumTrainsReducedConnectivity(Graph *graph, std::vector<Edge *> segmentsT
 std::unordered_map<Vertex *, int> capacityOnFailureAllStations(Graph *graph, Edge *segmentToRemove);
 
 /**
- * Computes the most affected stations on segment failure, i.e. the stations that lose the most trains after removing a segment
+ * @brief Computes the most affected stations on segment failure, i.e. the stations that lose the most trains after removing a segment
  * Time Complexity: O(|V|²|E|²) being |V| the number of vertices and |E| the number of edges
  * @param graph The graph representing the network
  * @param segmentToRemove The segment to remove

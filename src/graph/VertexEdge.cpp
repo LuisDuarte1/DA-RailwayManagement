@@ -26,7 +26,7 @@ unsigned int Vertex::getInDegree() const {
 
 int Vertex::getDistance() const { return distance; }
 
-Edge* Vertex::getPath() const {
+Edge *Vertex::getPath() const {
     return path;
 }
 
@@ -58,8 +58,8 @@ void Vertex::setDistance(int _distance) {
     this->distance = _distance;
 }
 
-Edge* Vertex::addEdge(Vertex* dest, int weight, const std::string& service) {
-    Edge* edge = new Edge(this, dest, weight, service);
+Edge *Vertex::addEdge(Vertex *dest, int weight, const std::string &service) {
+    Edge *edge = new Edge(this, dest, weight, service);
     edges.push_back(edge);
     dest->incoming.push_back(edge);
     return edge;
@@ -115,8 +115,8 @@ int Edge::getFlow() const {
     return flow;
 }
 
-int Edge::getCost() const { 
-    return cost; 
+int Edge::getCost() const {
+    return cost;
 }
 
 std::string Edge::getService() const {

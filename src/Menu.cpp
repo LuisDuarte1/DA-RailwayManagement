@@ -1,11 +1,11 @@
 #include "Menu.h"
 #include "LineFailures.h"
+#include "MinCost.h"
 #include <cstdlib>
-using namespace std;
 
 Graph *graph;
-string networkPath = DEFAULT_NETWORK_PATH;
-string stationsPath = DEFAULT_STATIONS_PATH;
+std::string networkPath = DEFAULT_NETWORK_PATH;
+std::string stationsPath = DEFAULT_STATIONS_PATH;
 bool stayInMenu;
 
 int Menu::auxMenu(int maxOption, int minOption) {
@@ -24,85 +24,88 @@ int Menu::auxMenu(int maxOption, int minOption) {
 }
 
 void Menu::clearScreen() {
-    #ifdef _WIN32   // Windows
-        system("cls");
-    #else          // Linux
-        std::cout << "\033[2J\033[1;1H";
-    #endif
+#ifdef _WIN32   // Windows
+    system("cls");
+#else          // Linux
+    std::cout << "\033[2J\033[1;1H";
+#endif
 }
 
 int Menu::dataLoaderMenu() {
     clearScreen();
-    cout << endl << "DATA MANAGEMENT MENU \n" << endl;
-    cout << "\t1. Use default data (PT network)" << endl;
-    cout << "\t2. Use new data" << endl;
-    cout << "\t0. Return to main menu" << endl;
-    cout << "\nChoose an option: ";
+    std::cout << std::endl << "DATA MANAGEMENT MENU \n" << std::endl;
+    std::cout << "\t1. Use default data (PT network)" << std::endl;
+    std::cout << "\t2. Use new data" << std::endl;
+    std::cout << "\t0. Return to main menu" << std::endl;
+    std::cout << "\nChoose an option: ";
     return auxMenu(2, 0);
 
 }
 
 int Menu::mainMenu() {
-    //clearScreen();
-    cout << "MAIN MENU\n\n";
-    cout << "\t1. Basic Service Metrics" << endl
-         << "\t2. Operation Cost Optimization" << endl
-         << "\t3. Reliability and Sensitivity to Line Failures" << endl
-         << "\t4. Change dataset" << endl
-         << "\t5. About us" << endl << endl
-         << "\t0. Quit" << endl;
-    cout << "----------------------------------------------------------------" << endl;
-    cout << "Choose an option: ";
+    std::cout << "MAIN MENU\n\n";
+    std::cout << "\t1. Basic Service Metrics" << std::endl
+              << "\t2. Operation Cost Optimization" << std::endl
+              << "\t3. Reliability and Sensitivity to Line Failures" << std::endl
+              << "\t4. Change dataset" << std::endl
+              << "\t5. About us" << std::endl << std::endl
+              << "\t0. Quit" << std::endl;
+    std::cout << "----------------------------------------------------------------" << std::endl;
+    std::cout << "Choose an option: ";
     return auxMenu(5, 0);
 }
 
 
 int Menu::AboutUsMenu() {
     clearScreen();
-    cout
+    std::cout
             << "\nHelp platform for the management of railway transports created in favor of the Design of Algorithms course\n"
-            << endl;
-    cout << "Meet the team: \n\n";
-    cout << left << setw(30) << "STUDENT NAME" << right << setw(18) << "STUDENT NUMBER" << setw(9) << endl << endl;
-    cout << left << setw(30) << "Hélder Costa" << setfill(' ') << right << setw(18) << "202108719" << endl;
-    cout << left << setw(30) << "Luís Duarte" << setfill(' ') << right << setw(18) << " 202108734" << endl;
-    cout << left << setw(30) << "Luís Jesus" << setfill(' ') << right << setw(18) << " 202108683" << endl;
-    cout << endl << "0.Return to main menu \n" << endl;
-    cout << "Choose an option: ";
+            << std::endl;
+    std::cout << "Meet the team: \n\n";
+    std::cout << std::left << std::setw(30) << "STUDENT NAME" << std::right << std::setw(18) << "STUDENT NUMBER"
+              << std::setw(9) << std::endl << std::endl;
+    std::cout << std::left << std::setw(30) << "Hélder Costa" << std::setfill(' ') << std::right << std::setw(18)
+              << "202108719" << std::endl;
+    std::cout << std::left << std::setw(30) << "Luís Duarte" << std::setfill(' ') << std::right << std::setw(18)
+              << " 202108734" << std::endl;
+    std::cout << std::left << std::setw(30) << "Luís Jesus" << std::setfill(' ') << std::right << std::setw(18)
+              << " 202108683" << std::endl;
+    std::cout << std::endl << "0.Return to main menu \n" << std::endl;
+    std::cout << "Choose an option: ";
     return auxMenu(0, 0);
 }
 
 int Menu::bsmMenu() {
     clearScreen();
-    cout << endl << "BASIC SERVICE METRICS MENU\n" << endl;
-    cout << "\t1. Maximum trains travelling simultaneously between two stations" << endl
-         << "\t2. Pair of stations requiring the most amount of trains" << endl
-         << "\t3. Top-k stations requiring larger budgets" << endl
-         << "\t4. Maximum number of trains that can simultaneously arrive at a station" << endl
-         << "\t0. Return to main menu" << endl << endl;
-    cout << "----------------------------------------------------------------" << endl;
-    cout << "Choose an option: ";
+    std::cout << std::endl << "BASIC SERVICE METRICS MENU\n" << std::endl;
+    std::cout << "\t1. Maximum trains travelling simultaneously between two stations" << std::endl
+              << "\t2. Pair of stations requiring the most amount of trains" << std::endl
+              << "\t3. Top-k stations requiring larger budgets" << std::endl
+              << "\t4. Maximum number of trains that can simultaneously arrive at a station" << std::endl
+              << "\t0. Return to main menu" << std::endl << std::endl;
+    std::cout << "----------------------------------------------------------------" << std::endl;
+    std::cout << "Choose an option: ";
     return auxMenu(4, 0);
 
 }
 
 int Menu::ocoMenu() {
     clearScreen();
-    cout << endl << "OPERATION COST OPTIMIZATION MENU\n";
-    cout << endl << "\t1. Choose source and destination stations \n";
-    cout << "\t0.Return to main menu\n";
-    cout << endl << "Choose an option: ";
+    std::cout << std::endl << "OPERATION COST OPTIMIZATION MENU\n";
+    std::cout << std::endl << "\t1. Choose source and destination stations \n";
+    std::cout << "\t0.Return to main menu\n";
+    std::cout << std::endl << "Choose an option: ";
     return auxMenu(1, 0);
 }
 
 int Menu::rsMenu() {
     clearScreen();
-    cout << endl << "RELIABILITY AND SENSITIVITY TO FAILURES MENU\n";
-    cout << endl
-         << "\t1. Max Number of trains that can simultaneously travel between 2 stations (reduced connectivity network)\n";
-    cout << "\t2. Most affected stations by segment failure\n";
-    cout << "\t0. Return to main menu\n";
-    cout << endl << "Choose an option: ";
+    std::cout << std::endl << "RELIABILITY AND SENSITIVITY TO FAILURES MENU\n";
+    std::cout << std::endl
+              << "\t1. Max Number of trains that can simultaneously travel between 2 stations (reduced connectivity network)\n";
+    std::cout << "\t2. Most affected stations by segment failure\n";
+    std::cout << "\t0. Return to main menu\n";
+    std::cout << std::endl << "Choose an option: ";
     return auxMenu(2, 0);
 }
 
@@ -110,8 +113,9 @@ void Menu::menuController() {
     int op;
     graph = loadDataset(networkPath, stationsPath);
     clearScreen();
-    cout << endl << "Welcome to the support platform for the management of railway transports!" << endl << endl;
-    cout << "--------------------RAILWAY ANALYSIS SYSTEM--------------------" << endl;
+    std::cout << std::endl << "Welcome to the support platform for the management of railway transports!" << std::endl
+              << std::endl;
+    std::cout << "--------------------RAILWAY ANALYSIS SYSTEM--------------------" << std::endl;
     do {
         int temp;
         op = mainMenu();
@@ -126,9 +130,10 @@ void Menu::menuController() {
                                 Vertex *src = getValidStationv2("origin/source");
                                 Vertex *dst = getValidStationv2("sink/destination");
                                 int result = graph->edmondsKarp(src, dst);
-                                cout << "The max amount of trains travelling simultaneously between "
-                                     << src->getStation().getName() << " and " << dst->getStation().getName() << " is "
-                                     << result << "." << endl << endl;
+                                std::cout << "The max amount of trains travelling simultaneously between "
+                                          << src->getStation().getName() << " and " << dst->getStation().getName()
+                                          << " is "
+                                          << result << "." << std::endl << std::endl;
                                 stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu (y/n)? ", true);
                                 if (stayInMenu) {
                                     temp = 1;
@@ -149,13 +154,13 @@ void Menu::menuController() {
                                 std::cout << "\n\t\tCalculating..." << std::endl << std::endl,
                                         result = graph->moreDemandingPairOfStations();
                                 clearScreen();
-                                cout << "The most demanding pair(s) of stations are: " << endl << endl;
+                                std::cout << "The most demanding pair(s) of stations are: " << std::endl << std::endl;
                                 for (auto &i: result.first) {
-                                    cout << "- " << i.first->getStation().getName() << " and "
-                                         << i.second->getStation().getName() << endl;
+                                    std::cout << "- " << i.first->getStation().getName() << " and "
+                                              << i.second->getStation().getName() << std::endl;
                                 }
-                                cout << endl << "The amount of trains that can travel simultaneously is "
-                                     << result.second << "." << endl << endl;
+                                std::cout << std::endl << "The amount of trains that can travel simultaneously is "
+                                          << result.second << "." << std::endl << std::endl;
                                 stayInMenu = getBooleanInputFromUser("Do you wish to stay on this menu (y/n) ?", true);
                                 if (stayInMenu) {
                                     temp = 1;
@@ -172,32 +177,48 @@ void Menu::menuController() {
 
                             case 3: {
                                 clearScreen();
-                                std::cout << "Here we will show you three different criteria that may be subject of analysis to determine the top-k regions that require larger budgets:" << std::endl << std::endl;
-                                std::cout << "\t1. TOP-K REGIONS WITH HIGHEST WEIGHTED AVERAGE: we use linear scaling to assign a "
-                                          << std::endl << "\tweight to the max-flow that each station can receive. Big Stations (stations that" << std::endl
-                                            << "\treceive more flow) receive a higher weight than small stations (stations that receive " << std::endl
-                                            << "\tless flow). This may give an idea of the regions that require more attention, as" << std::endl
-                                            << "\tthey receive many trains." << std::endl << std::endl;
+                                std::cout
+                                        << "Here we will show you three different criteria that may be subject of analysis to determine the top-k regions that require larger budgets:"
+                                        << std::endl << std::endl;
+                                std::cout
+                                        << "\t1. TOP-K REGIONS WITH HIGHEST WEIGHTED AVERAGE: we use linear scaling to assign a "
+                                        << std::endl
+                                        << "\tweight to the max-flow that each station can receive. Big Stations (stations that"
+                                        << std::endl
+                                        << "\treceive more flow) receive a higher weight than small stations (stations that receive "
+                                        << std::endl
+                                        << "\tless flow). This may give an idea of the regions that require more attention, as"
+                                        << std::endl
+                                        << "\tthey receive many trains." << std::endl << std::endl;
 
-                                std::cout << "\t2. TOP-K REGIONS WITH HIGHEST BOTTLENECK: we determine the max Flow that each station"
-                                          << std::endl << "\tcan receive and then we get the station of the region with highest Max Flow. This" << std::endl
-                                          << "\tcan give us an idea of more urbanized/crowded regions as they are more likely to have" << std::endl
-                                          << "\ta 'big central station'. Also, it may be a good region to build other connections as" << std::endl
-                                          << "\tthese stations also may provide a big flow." << std::endl << std::endl;
+                                std::cout
+                                        << "\t2. TOP-K REGIONS WITH HIGHEST BOTTLENECK: we determine the max Flow that each station"
+                                        << std::endl
+                                        << "\tcan receive and then we get the station of the region with highest Max Flow. This"
+                                        << std::endl
+                                        << "\tcan give us an idea of more urbanized/crowded regions as they are more likely to have"
+                                        << std::endl
+                                        << "\ta 'big central station'. Also, it may be a good region to build other connections as"
+                                        << std::endl
+                                        << "\tthese stations also may provide a big flow." << std::endl << std::endl;
 
-                                std::cout << "\t3. TOP-K REGIONS WITH HIGHEST NUMBER OF STATIONS: we count the number of stations in" << std::endl
-                                          << "\teach region and then we get the top-k regions with the highest number of stations." << std::endl
-                                          << "\tThis may give us an idea of the regions that require more attention as they have more" << std::endl
-                                          << "\tstations to maintain." << std::endl << std::endl;
+                                std::cout
+                                        << "\t3. TOP-K REGIONS WITH HIGHEST NUMBER OF STATIONS: we count the number of stations in"
+                                        << std::endl
+                                        << "\teach region and then we get the top-k regions with the highest number of stations."
+                                        << std::endl
+                                        << "\tThis may give us an idea of the regions that require more attention as they have more"
+                                        << std::endl
+                                        << "\tstations to maintain." << std::endl << std::endl;
                                 int k = getIntegerInputFromUser("Choose the value for K (number of locations): ");
-                                cout << endl;
+                                std::cout << std::endl;
                                 bool useDistrict = getBooleanInputFromUser(
                                         "Do you wish to see the result district-wise or municipality-wise (d or m respectively)? ",
                                         true);
                                 std::cout << std::endl;
                                 displayTopK(k, useDistrict);
                                 stayInMenu = getBooleanInputFromUser(
-                                        "Do you wish to stay on this menu and change the settings? ", true);
+                                        "Do you wish to stay on this menu and change the settings (y/n)? ", true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
@@ -210,13 +231,14 @@ void Menu::menuController() {
 
                             case 4: {
                                 clearScreen();
-                                cout << endl;
+                                std::cout << std::endl;
                                 Vertex *st = getValidStationv2("desired");
                                 int result = graph->edmondsKarpSinkOnly(st);
-                                cout << "The maximum amount of trains that can arrive at " << st->getStation().getName()
-                                     << " is " << result << endl;
+                                std::cout << "The maximum amount of trains that can arrive at "
+                                          << st->getStation().getName()
+                                          << " is " << result << std::endl;
                                 stayInMenu = getBooleanInputFromUser(
-                                        "\nDo you wish to stay on this menu and change the station? ", true);
+                                        "\nDo you wish to stay on this menu and change the station (y/n)? ", true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
@@ -247,6 +269,65 @@ void Menu::menuController() {
                                 clearScreen();
                                 Vertex *src = getValidStationv2("origin/source");
                                 Vertex *dst = getValidStationv2("sink/destination");
+                                std::vector<std::pair<std::vector<Edge *>, int>> answers = getMinCostPaths(graph, src,
+                                                                                                           dst);
+                                int totalCost = 0;
+                                clearScreen();
+                                std::cout << "The optimal solution that maintains the max-flow contains "
+                                          << answers.size() << " (the cheapest) paths from "
+                                          << src->getStation().getName() << " to " << dst->getStation().getName() << "."
+                                          << std::endl;
+
+                                for (auto path: answers) {
+                                    graph->resetFlow();
+                                    graph->resetVisited();
+                                    int cost = calculateCostOfPath(path.first);
+                                    totalCost += cost * path.second;
+                                }
+
+                                std::cout << "Total cost for the company: " << totalCost << "€" << std::endl;
+                                bool seePaths = getBooleanInputFromUser("\nDo you wish to see the paths (y/n)? ", true);
+                                if (seePaths) {
+                                    clearScreen();
+                                    int countPath = 1;
+                                    for (auto path: answers) {
+                                        graph->resetFlow();
+                                        graph->resetVisited();
+                                        int cost = calculateCostOfPath(path.first);
+                                        std::cout << "This path should be done with " << path.second << " trains.\n";
+                                        std::cout << "The total cost per train is: " << cost << "€.\n\n";
+                                        std::cout << "The total cost is: " << cost * path.second << "€.\n\n";
+                                        std::cout << "\t" << path.first[0]->getDest()->getStation().getName() << "\n";
+                                        std::cout << "\t^\n";
+                                        std::cout << "\t|" << "\033[1;31m Service: " << path.first[0]->getService()
+                                                  << "\033[0m" << std::endl;
+                                        std::cout << "\t|\n";
+                                        for (auto it = path.first.begin(); it != (--path.first.end()); it++) {
+                                            std::cout << "\t" << (*it)->getOrigin()->getStation().getName()
+                                                      << std::endl;
+                                            std::cout << "\t^\n";
+                                            std::cout << "\t|" << "\033[1;31m Service: " << (*it)->getService()
+                                                      << "\033[0m" << std::endl;
+                                            std::cout << "\t|\n";
+                                        }
+                                        std::cout << "\t" << path.first[path.first.size() -
+                                                                        1]->getOrigin()->getStation().getName()
+                                                  << std::endl;
+                                        if (countPath < 4) {
+                                            std::cout << "\nYou've just seen " << countPath << " of " << answers.size()
+                                                      << " paths. ";
+                                            bool next = getBooleanInputFromUser(
+                                                    "Do you wish to see the next one (y/n)? ", true);
+                                            if (!next) {
+                                                clearScreen();
+                                                break;
+                                            } else clearScreen();
+                                        }
+                                        countPath++;
+                                    }
+                                }
+                                stayInMenu = getBooleanInputFromUser(
+                                        "Do you wish to stay on this menu and change the stations (y/n)? ", true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
@@ -271,7 +352,8 @@ void Menu::menuController() {
                             case 1 : {
                                 clearScreen();
                                 maximumTrainsReducedConnectivityMenu();
-                                stayInMenu = getBooleanInputFromUser("\nDo you wish to continue on this menu? ", true);
+                                stayInMenu = getBooleanInputFromUser("\nDo you wish to continue on this menu (y/n)? ",
+                                                                     true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
@@ -290,17 +372,19 @@ void Menu::menuController() {
                                 std::vector<std::pair<Vertex *, std::pair<int, int>>> result;
                                 result = mostAffectedStationsOnSegmentFailure(graph, segment);
                                 clearScreen();
-                                cout << "The most affected stations on the removal of the chosen segment are: " << endl
-                                     << endl;
+                                std::cout << "The most affected stations on the removal of the chosen segment are: "
+                                          << std::endl
+                                          << std::endl;
                                 for (int i = 0; i < k; i++) {
-                                    cout << "- " << result[i].first->getStation().getName()
-                                         << " with an initial maximum amount of trains of " << result[i].second.first
-                                         << " and a final maximum amount of trains of " << result[i].second.second
-                                         << endl;
+                                    std::cout << "- " << result[i].first->getStation().getName()
+                                              << " with an initial maximum amount of trains of "
+                                              << result[i].second.first
+                                              << " and a final maximum amount of trains of " << result[i].second.second
+                                              << std::endl;
                                 }
 
                                 stayInMenu = getBooleanInputFromUser(
-                                        "\nDo you wish to stay on this menu and change the segment? ", true);
+                                        "\nDo you wish to stay on this menu and change the segment (y/n)? ", true);
                                 if (stayInMenu) {
                                     break;
                                 } else {
@@ -337,18 +421,19 @@ void Menu::menuController() {
 
                             case 2: {
                                 while (true) {
-                                    cout << "\nInsert the paths for new data: " << "\n" << "Path for network file: ";
-                                    cin >> networkPath;
-                                    cout << endl;
+                                    std::cout << "\nInsert the paths for new data: " << "\n"
+                                              << "Path for network file: ";
+                                    std::cin >> networkPath;
+                                    std::cout << std::endl;
 
                                     if (networkPath == "q" || networkPath == "Q") {
                                         control = 1;
                                         break;
                                     }
 
-                                    cout << "Path for the stations file:";
-                                    cin >> stationsPath;
-                                    cout << endl;
+                                    std::cout << "Path for the stations file:";
+                                    std::cin >> stationsPath;
+                                    std::cout << std::endl;
 
                                     if (stationsPath == "q" || stationsPath == "Q") {
                                         control = 1;
@@ -359,7 +444,7 @@ void Menu::menuController() {
 
                                     if (graph != nullptr) break;
 
-                                    cout
+                                    std::cout
                                             << "Make sure you entered the correct paths, write 'q' to revert to default data and go to main menu\n";
                                 }
                                 control = 0;
@@ -398,8 +483,8 @@ void Menu::menuController() {
         clearScreen();
 
     } while (op != 0);
-    cout << "\n";
-    cout << "Thank you for using our platform!" << endl;
+    std::cout << "\n";
+    std::cout << "Thank you for using our platform!" << std::endl;
 }
 
 void Menu::maximumTrainsReducedConnectivityMenu() {
@@ -421,54 +506,6 @@ void Menu::maximumTrainsReducedConnectivityMenu() {
     std::cout << "- Normal Network: \t Max-Flow:" << normalFlow << "\n";
 }
 
-
-
-void Menu::minCostMenu() {
-    std::cout << "======================================================" << std::endl << std::endl;
-    Vertex * src = getValidStation("source");
-    Vertex * dst = getValidStation("dst");
-    //Vertex * src = graph->findVertex("Lisboa Santa Apolónia");
-    //Vertex * dst = graph->findVertex("Coimbra B");
-
-    auto answers = getMinCostPaths(graph, src, dst);
-    std::cout << "The optimal solution contains " << answers.size() << " paths...\n";
-    int totalCost = 0;
-    for(auto path : answers){
-        graph->resetFlow();
-        graph->resetVisited();
-        int cost = calculateCostOfPath(path.first);
-        totalCost += cost*path.second;
-        std::cout << "This path should be done with " << path.second << " trains.\n";
-        std::cout << "The total cost per train is: " << cost << "€.\n\n";
-        std::cout << "The total cost is: " << cost*path.second << "€.\n\n";
-        std::cout << "\t" << path.first[0]->getDest()->getStation().getName() << "\n";
-        std::cout << "\t^\n";
-        std::cout << "\t|\n"; 
-        std::cout << "\t|\n"; 
-        for(auto it = path.first.begin(); it != (--path.first.end()); it++){
-            std::cout << "\t" << (*it)->getOrigin()->getStation().getName() << "\n";
-            std::cout << "\t^\n";
-            std::cout << "\t|\n"; 
-            std::cout << "\t|\n"; 
-        }
-        std::cout << "\t" << path.first[path.first.size()-1]->getOrigin()->getStation().getName() << "\n";
-        std::cout << "===================" << std::endl << std::endl;
-    }
-    std::cout << "The total cost to go from " << src->getStation().getName()
-    << " to " << dst->getStation().getName() << " is " << totalCost << "€\n";  
-}
-
-void Menu::reportFailureSegmentMenu() {
-    std::cout << "======================================================" << std::endl << std::endl;
-    Edge *edge = getValidSegment("segment to fail");
-    auto mostAffectedStations = mostAffectedStationsOnSegmentFailure(graph, edge);
-    int topK = getIntegerInputFromUser("How many results do you want to display (top-k): ");
-    for (int i = 0; i < mostAffectedStations.size() && i < topK; i++) {
-        std::cout << mostAffectedStations[i].first->getStation().getName() << " :\t" <<
-                  abs(mostAffectedStations[i].second.first - mostAffectedStations[i].second.second) << "\n";
-    }
-}
-
 Vertex *Menu::getValidStation(std::string displayQuery) {
     Vertex *v;
     do {
@@ -478,7 +515,7 @@ Vertex *Menu::getValidStation(std::string displayQuery) {
             std::getline(std::cin, station);
         } while (station.empty());
         v = graph->findVertex(station);
-        std::cout << endl;
+        std::cout << std::endl;
         if (v == nullptr) std::cout << "Invalid station name... please try again..\n\n";
     } while (v == nullptr);
     return v;
@@ -494,7 +531,7 @@ Vertex *Menu::getValidStationv2(std::string displayQuery) {
             std::getline(std::cin, station);
         } while (station.empty());
         v = graph->findVertex(station);
-        std::cout << endl;
+        std::cout << std::endl;
         if (v == nullptr) std::cout << "Invalid station name... please try again..\n\n";
     } while (v == nullptr);
     return v;
@@ -520,8 +557,8 @@ Edge *Menu::getValidSegment(std::string displayQuery) {
 
 bool Menu::getBooleanInputFromUser(std::string displayString, bool defaultEnter) {
     while (true) {
-        cin.clear();
-        cin.sync();
+        std::cin.clear();
+        std::cin.sync();
         std::cout << displayString;
         char choice = 0;
         std::cin >> choice;
