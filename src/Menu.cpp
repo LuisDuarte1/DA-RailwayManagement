@@ -313,7 +313,7 @@ void Menu::menuController() {
                                         std::cout << "\t" << path.first[path.first.size() -
                                                                         1]->getOrigin()->getStation().getName()
                                                   << std::endl << std::endl;
-                                        if (countPath < 4) {
+                                        if (countPath < answers.size()) {
                                             std::cout << "\nYou've just seen " << countPath << " of " << answers.size()
                                                       << " paths. ";
                                             bool next = getBooleanInputFromUser(
