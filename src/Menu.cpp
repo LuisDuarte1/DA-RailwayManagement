@@ -281,10 +281,12 @@ void Menu::minCostMenu() {
 
     auto answers = getMinCostPaths(graph, src, dst);
     std::cout << "The optimal solution contains " << answers.size() << " paths...\n";
+    int totalCost = 0;
     for(auto path : answers){
         graph->resetFlow();
         graph->resetVisited();
         int cost = calculateCostOfPath(path.first);
+        totalCost += cost*path.second;
         std::cout << "This path should be done with " << path.second << " trains.\n";
         std::cout << "The total cost per train is: " << cost << "€.\n\n";
         std::cout << "The total cost is: " << cost*path.second << "€.\n\n";
@@ -300,8 +302,9 @@ void Menu::minCostMenu() {
         }
         std::cout << "\t" << path.first[path.first.size()-1]->getOrigin()->getStation().getName() << "\n";
         std::cout << "===================" << std::endl << std::endl;
-
     }
+    std::cout << "The total cost to go from " << src->getStation().getName()
+    << " to " << dst->getStation().getName() << " is " << totalCost << "€\n";  
 }
 
 void Menu::reportFailureSegmentMenu() {
